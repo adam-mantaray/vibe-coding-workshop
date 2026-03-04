@@ -21,6 +21,7 @@
     --red: #ef4444;
     --orange: #f97316;
     --yellow: #eab308;
+    --pink: #ec4899;
   }
 
   body {
@@ -50,58 +51,25 @@
     text-align: center;
   }
 
-  .slide.active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: all;
+  .slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+  .slide.prev { opacity: 0; transform: translateY(-20px); }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.03) 0%, transparent 70%);
+    pointer-events: none;
   }
 
-  .slide.prev {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
+  h1 { font-size: 4.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px; }
+  h2 { font-size: 3.2rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px; }
+  h3 { font-size: 1.6rem; font-weight: 500; margin-bottom: 16px; color: var(--muted); }
+  p, li { font-size: 1.5rem; line-height: 1.6; color: var(--muted); }
 
-  h1 {
-    font-size: 4.5rem;
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 24px;
-  }
-
-  h2 {
-    font-size: 3.2rem;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-  }
-
-  h3 {
-    font-size: 1.6rem;
-    font-weight: 500;
-    margin-bottom: 16px;
-    color: var(--muted);
-  }
-
-  p, li {
-    font-size: 1.5rem;
-    line-height: 1.6;
-    color: var(--muted);
-  }
-
-  .big-text {
-    font-size: 2.2rem;
-    line-height: 1.5;
-    max-width: 850px;
-  }
-
-  .huge-text {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.4;
-    max-width: 900px;
-  }
+  .big-text { font-size: 2.2rem; line-height: 1.5; max-width: 850px; }
+  .huge-text { font-size: 3rem; font-weight: 700; line-height: 1.4; max-width: 900px; }
 
   .accent { color: var(--accent); }
   .accent2 { color: var(--accent2); }
@@ -109,6 +77,7 @@
   .red { color: var(--red); }
   .orange { color: var(--orange); }
   .yellow { color: var(--yellow); }
+  .pink { color: var(--pink); }
   .white { color: var(--text); }
   .muted { color: var(--muted); }
 
@@ -119,7 +88,7 @@
     background-clip: text;
   }
 
-  /* Prompt / code box */
+  /* Prompt box */
   .prompt-box {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -135,25 +104,9 @@
     position: relative;
   }
 
-  .prompt-box .cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.3em;
-    background: var(--accent);
-    animation: blink 1s infinite;
-    vertical-align: text-bottom;
-    margin-left: 4px;
-  }
-
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-
   .prompt-label {
     position: absolute;
-    top: -12px;
-    left: 20px;
+    top: -12px; left: 20px;
     background: var(--bg);
     padding: 0 12px;
     font-size: 0.85rem;
@@ -161,7 +114,18 @@
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Cards */
+  .cursor {
+    display: inline-block;
+    width: 2px; height: 1.3em;
+    background: var(--accent);
+    animation: blink 1s infinite;
+    vertical-align: text-bottom;
+    margin-left: 4px;
+  }
+
+  @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+  /* Cards - horizontal */
   .layers {
     display: flex;
     gap: 20px;
@@ -180,14 +144,11 @@
     transition: all 0.3s ease;
   }
 
-  .layer-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-  }
-
+  .layer-card:hover { border-color: var(--accent); transform: translateY(-4px); }
   .layer-card .emoji { font-size: 2.5rem; margin-bottom: 12px; }
   .layer-card h4 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
   .layer-card p { font-size: 1rem; color: var(--muted); }
+  .layer-card .sub { font-size: 0.85rem; color: #555; margin-top: 8px; }
 
   .layer-card .rec {
     margin-top: 12px;
@@ -226,7 +187,7 @@
   .stack-col.good li::before { content: '✅'; }
   .stack-col.bad li::before { content: '❌'; }
 
-  /* Vertical stack */
+  /* V stack */
   .v-stack {
     display: flex;
     flex-direction: column;
@@ -263,23 +224,19 @@
   .tag.purple { background: rgba(99,102,241,0.15); color: var(--accent); }
   .tag.cyan { background: rgba(34,211,238,0.15); color: var(--accent2); }
   .tag.green-tag { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag.orange-tag { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .tag.pink-tag { background: rgba(236,72,153,0.15); color: var(--pink); }
+  .tag.red-tag { background: rgba(239,68,68,0.15); color: var(--red); }
 
-  .divider {
-    width: 60px;
-    height: 4px;
-    background: var(--accent);
-    border-radius: 2px;
-    margin: 20px auto;
-  }
+  .divider { width: 60px; height: 4px; background: var(--accent); border-radius: 2px; margin: 20px auto; }
 
-  /* Quote style */
+  /* Quote */
   .quote {
     font-size: 2rem;
     font-style: italic;
     color: var(--text);
     max-width: 750px;
     margin: 16px 0;
-    position: relative;
     padding-left: 24px;
     border-left: 4px solid var(--accent);
     text-align: left;
@@ -293,52 +250,7 @@
     margin-top: 12px;
   }
 
-  /* Confession list */
-  .confession-list {
-    text-align: left;
-    max-width: 700px;
-  }
-
-  .confession-list li {
-    font-size: 1.4rem;
-    padding: 10px 0;
-    list-style: none;
-    color: var(--text);
-  }
-
-  .confession-list li::before {
-    content: '😅 ';
-  }
-
-  /* Workshop steps */
-  .workshop-steps {
-    display: flex;
-    gap: 20px;
-    max-width: 1100px;
-    width: 100%;
-    margin-top: 24px;
-  }
-
-  .workshop-step {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    text-align: center;
-  }
-
-  .workshop-step .step-num {
-    font-size: 3rem;
-    font-weight: 900;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .workshop-step h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-  .workshop-step p { font-size: 1rem; color: var(--muted); }
-
-  /* Audience callout */
+  /* Callout */
   .callout {
     font-size: 3.5rem;
     font-weight: 900;
@@ -353,84 +265,127 @@
     transform-origin: 70% 70%;
   }
 
-  @keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(20deg); }
-    75% { transform: rotate(-15deg); }
-  }
+  @keyframes wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(20deg); } 75% { transform: rotate(-15deg); } }
 
   /* Timeline */
-  .timeline {
-    max-width: 700px;
-    width: 100%;
-    text-align: left;
-    margin-top: 16px;
-  }
+  .timeline { max-width: 700px; width: 100%; text-align: left; margin-top: 16px; }
+  .timeline .step { display: flex; gap: 20px; padding: 14px 0; align-items: flex-start; }
+  .timeline .time { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--accent); min-width: 60px; padding-top: 4px; }
+  .timeline .content h4 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .timeline .content p { font-size: 1.05rem; color: var(--muted); }
 
-  .timeline .step {
+  /* Evolution arrow chain */
+  .evo-chain {
     display: flex;
-    gap: 20px;
-    padding: 16px 0;
-    align-items: flex-start;
+    align-items: center;
+    gap: 0;
+    margin-top: 32px;
+    max-width: 1000px;
   }
 
-  .timeline .time {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1rem;
+  .evo-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    text-align: center;
+    flex: 1;
+    transition: all 0.3s ease;
+  }
+
+  .evo-node:hover { transform: translateY(-4px); }
+  .evo-node .year { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+  .evo-node .emoji { font-size: 2.5rem; margin-bottom: 8px; }
+  .evo-node h4 { font-size: 1.1rem; font-weight: 700; }
+  .evo-node p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+  .evo-arrow {
+    font-size: 1.5rem;
     color: var(--accent);
-    min-width: 80px;
-    padding-top: 4px;
+    padding: 0 8px;
+    flex-shrink: 0;
   }
 
-  .timeline .content h4 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 4px;
+  /* Tool grid - 3 col */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    max-width: 1100px;
+    width: 100%;
+    margin-top: 24px;
   }
 
-  .timeline .content p {
-    font-size: 1.1rem;
-    color: var(--muted);
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: left;
+    transition: all 0.3s ease;
   }
 
-  /* Fixed elements */
-  .slide-counter {
-    position: fixed;
-    bottom: 20px;
-    right: 30px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    color: #333;
-    z-index: 100;
-  }
-
-  .progress-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transition: width 0.5s ease;
-    z-index: 100;
-  }
-
-  .watermark {
-    position: fixed;
-    bottom: 20px;
-    left: 30px;
-    font-size: 0.85rem;
-    color: #333;
-    z-index: 100;
+  .tool-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .tool-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+  .tool-card p { font-size: 0.9rem; color: var(--muted); }
+  .tool-card .tool-tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
   }
 
-  /* Subtle bg pattern */
-  .slide::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.03) 0%, transparent 70%);
-    pointer-events: none;
+  /* Confession */
+  .confession-list { text-align: left; max-width: 700px; }
+  .confession-list li { font-size: 1.4rem; padding: 10px 0; list-style: none; color: var(--text); }
+  .confession-list li::before { content: '😅 '; }
+
+  /* Workshop steps */
+  .workshop-steps { display: flex; gap: 20px; max-width: 1100px; width: 100%; margin-top: 24px; }
+  .workshop-step { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: center; }
+  .workshop-step .step-num { font-size: 3rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; }
+  .workshop-step h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+  .workshop-step p { font-size: 1rem; color: var(--muted); }
+
+  /* Fixed */
+  .slide-counter { position: fixed; bottom: 20px; right: 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #333; z-index: 100; }
+  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s ease; z-index: 100; }
+  .watermark { position: fixed; bottom: 20px; left: 30px; font-size: 0.85rem; color: #333; z-index: 100; font-weight: 600; }
+
+  /* Comparison table-ish */
+  .compare-row {
+    display: flex;
+    gap: 12px;
+    max-width: 1000px;
+    width: 100%;
+    margin-top: 8px;
+    align-items: stretch;
+  }
+
+  .compare-cell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  .compare-cell h5 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .compare-cell .val {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
   }
 </style>
 </head>
@@ -447,7 +402,8 @@
     <h3 class="muted" style="font-size: 1.2rem; letter-spacing: 0.1em; text-transform: uppercase;">Ahmed Afify</h3>
     <h1 style="margin-top: 8px;"><span class="gradient-text">Vibe Coding</span><br>with Knowledge</h1>
     <p class="big-text" style="margin-top: 12px;">
-      What 10 years of building taught me<br>about letting AI write my code
+      How apps actually work, the AI tools that build them,<br>
+      and why your brain still matters
     </p>
     <div style="margin-top: 40px;">
       <span class="tag purple">MSc Computer Science</span>
@@ -459,7 +415,8 @@
   <!-- 2: AUDIENCE CHECK -->
   <div class="slide">
     <p class="callout">
-      Hands up if you've asked AI<br>to build something<br>and it <span class="green">actually worked</span>
+      Hands up if you've used<br>
+      an AI tool to write code
       <span class="hand">✋</span>
     </p>
   </div>
@@ -467,20 +424,20 @@
   <!-- 3: SECOND CHECK -->
   <div class="slide">
     <p class="callout">
-      Now hands up if it worked...<br>
-      <span class="red">and then completely fell apart</span><br>
-      when you tried to change one thing
+      Now hands up if you<br>
+      <span class="white">actually understood</span><br>
+      what it gave you
     </p>
     <p style="margin-top: 32px; font-size: 1.5rem;">
-      <span class="muted">Yeah. That's what we're here to fix.</span>
+      <span class="muted">No judgment. That's literally why we're here.</span>
     </p>
   </div>
 
   <!-- 4: THE DREAM PROMPT -->
   <div class="slide">
-    <h3 class="muted">Every founder on Twitter right now:</h3>
+    <h3 class="muted">Every Twitter founder right now:</h3>
     <div class="prompt-box" style="margin-top: 16px;">
-      <div class="prompt-label">chatgpt-4o</div>
+      <div class="prompt-label">prompt.txt</div>
       Build me a SaaS that makes $1M ARR.<br>
       Use the best tech stack.<br>
       Make zero mistakes.<br>
@@ -500,83 +457,98 @@
     <h2>What Actually Happens</h2>
     <div class="timeline">
       <div class="step">
-        <div class="time">0:00</div>
+        <div class="time" style="color: var(--green);">0:00</div>
         <div class="content">
           <h4><span class="green">"I'm a genius"</span></h4>
-          <p>Beautiful landing page. Tailwind gradients. Smooth animations. You screenshot it for Twitter.</p>
+          <p>Beautiful landing page. Tailwind gradients. You screenshot it for the group chat.</p>
         </div>
       </div>
       <div class="step">
-        <div class="time">2:00</div>
+        <div class="time" style="color: var(--yellow);">2:00</div>
         <div class="content">
           <h4><span class="yellow">"Where does the data go?"</span></h4>
-          <p>47 components. Zero backend. The login button goes nowhere. But it looks great.</p>
+          <p>47 components. Zero backend. The login button is decorative.</p>
         </div>
       </div>
       <div class="step">
-        <div class="time">5:00</div>
+        <div class="time" style="color: var(--orange);">5:00</div>
         <div class="content">
-          <h4><span class="orange">"Why is nothing working?"</span></h4>
-          <p>You asked it to "fix the bug" 14 times. Each fix created 2 new bugs. Classic.</p>
+          <h4><span class="orange">"Fix this bug" × 14</span></h4>
+          <p>Each fix creates 2 new bugs. You're in a prompt death spiral.</p>
         </div>
       </div>
       <div class="step">
-        <div class="time">8:00</div>
+        <div class="time" style="color: var(--red);">8:00</div>
         <div class="content">
           <h4><span class="red">"New chat. Start over."</span></h4>
-          <p>You've mass-deleted the project twice and you're emotionally invested in something that doesn't exist.</p>
+          <p>Delete everything. Burn the tokens. Repeat tomorrow.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 6: PAUSE — THE REAL ISSUE -->
+  <!-- 6: WHY THIS HAPPENS -->
   <div class="slide">
     <p class="huge-text">
-      The AI is <span class="white">really good</span><br>
-      at writing code.<br><br>
-      It's <span class="red">really bad</span><br>
-      at knowing <em>what</em> to build.
+      This happens because<br>
+      you asked the AI to<br>
+      <span class="red">make decisions</span><br>
+      it's not qualified to make.
     </p>
   </div>
 
-  <!-- 7: THAT'S YOUR JOB -->
+  <!-- 7: TWO THINGS -->
   <div class="slide">
-    <p class="huge-text" style="font-size: 4rem;">
-      <span class="gradient-text">That's your job.</span>
-    </p>
-    <p class="big-text" style="margin-top: 24px;">
-      You're not the coder anymore.<br>
-      You're the <span class="white">architect</span>, the <span class="white">decision-maker</span>,<br>
-      and the <span class="white">quality filter</span>.
-    </p>
-  </div>
-
-  <!-- 8: WHAT YOU ACTUALLY NEED TO KNOW -->
-  <div class="slide">
-    <h2>So What Do You<br>Actually Need to Know?</h2>
+    <h2>Today We'll Cover Two Things</h2>
     <div class="divider"></div>
-    <p class="big-text" style="margin-top: 8px;">
-      Not everything. Just the <span class="white">shape of the thing</span>.<br>
-      <span class="muted">Think of it like being a contractor — you don't lay every brick,<br>but you better know what a load-bearing wall is.</span>
+    <div class="stack-grid" style="margin-top: 24px;">
+      <div class="stack-col" style="border-color: var(--accent);">
+        <h4 style="color: var(--accent); font-size: 1.5rem;">🧠 The Knowledge</h4>
+        <p style="font-size: 1.2rem; color: var(--muted); margin-top: 12px;">
+          How apps actually work.<br>
+          The layers. The architecture.<br>
+          The stuff you need to know<br>
+          <em>before</em> you open any AI tool.
+        </p>
+      </div>
+      <div class="stack-col" style="border-color: var(--accent2);">
+        <h4 style="color: var(--accent2); font-size: 1.5rem;">🛠️ The Tools</h4>
+        <p style="font-size: 1.2rem; color: var(--muted); margin-top: 12px;">
+          Models, agents, IDEs, CLIs.<br>
+          What exists, what's good,<br>
+          how to pick the right tool<br>
+          for the right job.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PART 1: THE KNOWLEDGE ==================== -->
+
+  <!-- 8: PART 1 HEADER -->
+  <div class="slide">
+    <h3 class="muted" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 1rem;">Part 1</h3>
+    <h1 style="margin-top: 8px;">How Apps<br>Actually Work</h1>
+    <p class="big-text" style="margin-top: 12px;">
+      <span class="muted">The stuff nobody explains because<br>"you should just know it"</span>
     </p>
   </div>
 
   <!-- 9: THE LAYERS -->
   <div class="slide">
     <h2>Every App Has 4 Layers</h2>
-    <h3>You don't need to master them. You need to <em>not ignore</em> them.</h3>
+    <h3>You don't need to master them. You need to know they exist.</h3>
     <div class="layers">
       <div class="layer-card">
         <div class="emoji">🖥️</div>
         <h4>Frontend</h4>
-        <p>What people see. Buttons, pages, forms. The pretty part.</p>
-        <div class="rec">Next.js / React</div>
+        <p>What people see. Buttons, pages, forms, animations.</p>
+        <div class="rec">React / Next.js</div>
       </div>
       <div class="layer-card">
         <div class="emoji">⚙️</div>
         <h4>Backend</h4>
-        <p>The brain. Logic, auth, "who can do what."</p>
+        <p>The brain. Logic, rules, "who can do what."</p>
         <div class="rec">Convex / Supabase</div>
       </div>
       <div class="layer-card">
@@ -588,30 +560,49 @@
       <div class="layer-card">
         <div class="emoji">🚀</div>
         <h4>Infra</h4>
-        <p>How it goes live. Hosting, domains, "the cloud."</p>
+        <p>How it reaches the internet. Hosting, domains, SSL.</p>
         <div class="rec">Vercel / Railway</div>
       </div>
     </div>
   </div>
 
-  <!-- 10: MOST PEOPLE SKIP -->
+  <!-- 10: THE REAL PROBLEM -->
   <div class="slide">
     <p class="huge-text">
-      Most vibe coders<br>
-      only think about layer <span class="accent">one</span>.<br><br>
-      <span class="muted" style="font-size: 1.8rem;">That's why the app looks amazing<br>and does absolutely nothing.</span>
+      Most vibe coders only<br>
+      think about <span class="accent">layer one</span>.<br><br>
+      <span class="muted" style="font-size: 1.8rem;">That's why it looks amazing<br>and does absolutely nothing.</span>
     </p>
   </div>
 
-  <!-- 11: THE $1M SAAS — FOR REAL -->
+  <!-- 11: DATA MODEL -->
   <div class="slide">
-    <h2>OK Let's Actually Build That<br><span class="accent">$1M SaaS</span></h2>
-    <h3>Same dream, but with a brain this time</h3>
+    <h2>Start With the Data</h2>
+    <h3>Before you write ANY prompt, answer this:</h3>
+    <div class="prompt-box" style="font-size: 1.2rem;">
+      <div class="prompt-label">think before you prompt</div>
+      <span class="accent">What are the "things" in my app?</span><br>
+      → Users, Products, Orders, Reviews<br><br>
+      <span class="accent2">How do they relate?</span><br>
+      → Users place Orders. Orders contain Products. Users write Reviews.<br><br>
+      <span class="green">What can people DO?</span><br>
+      → Sign up, browse, add to cart, checkout, leave review<br><br>
+      <span class="orange">Who can see what?</span><br>
+      → Users see their orders. Admins see all orders. Nobody sees passwords.
+    </div>
+    <p style="margin-top: 16px; font-size: 1.2rem; color: var(--muted);">
+      If you can answer these, the AI can build the rest.
+    </p>
+  </div>
+
+  <!-- 12: VIBE VS KNOWLEDGE PROMPT -->
+  <div class="slide">
+    <h2>Same App, Different Prompt</h2>
     <div class="stack-grid">
       <div class="stack-col bad">
-        <h4>❌ The Vibe Prompt</h4>
+        <h4>❌ Vibes Only</h4>
         <ul>
-          <li>"Use the best tech stack"</li>
+          <li>"Build me an e-commerce store"</li>
           <li>"Add authentication"</li>
           <li>"Make it scalable"</li>
           <li>"Handle payments"</li>
@@ -619,96 +610,327 @@
         </ul>
       </div>
       <div class="stack-col good">
-        <h4>✅ What You Should Say</h4>
+        <h4>✅ Vibes + Knowledge</h4>
         <ul>
-          <li>Next.js 15 + Convex (real-time, typed)</li>
-          <li>Clerk auth (Google + email, 5 min setup)</li>
-          <li>Start with ONE feature. Ship it. Learn.</li>
-          <li>Stripe Checkout → webhook → update DB</li>
-          <li>Vercel. Push to GitHub = deployed.</li>
+          <li>Next.js 15 + Convex. Products, orders, users tables.</li>
+          <li>Clerk for auth — Google + email, role-based access</li>
+          <li>Start with product listing + cart. That's it for v1.</li>
+          <li>Stripe Checkout → webhook → mark order paid in DB</li>
+          <li>Vercel. Push to main = live. Preview on PR.</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <!-- 12: THE STUFF AI GETS WRONG -->
+  <!-- ==================== PART 2: THE TOOLS ==================== -->
+
+  <!-- 13: PART 2 HEADER -->
   <div class="slide">
-    <h2>Things AI Will<br><span class="red">Confidently</span> Get Wrong</h2>
-    <h3>And you won't catch unless you know what to look for</h3>
+    <h3 class="muted" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 1rem;">Part 2</h3>
+    <h1 style="margin-top: 8px;">The AI<br>Landscape</h1>
+    <p class="big-text" style="margin-top: 12px;">
+      <span class="muted">Models → Tools → Agents<br>and how they all fit together</span>
+    </p>
+  </div>
+
+  <!-- 14: THE EVOLUTION -->
+  <div class="slide">
+    <h2>How We Got Here</h2>
+    <div class="evo-chain">
+      <div class="evo-node" style="border-color: var(--muted);">
+        <div class="year">2021</div>
+        <div class="emoji">📝</div>
+        <h4>Autocomplete</h4>
+        <p>Copilot. Finish your line.</p>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-node" style="border-color: var(--accent);">
+        <div class="year">2023</div>
+        <div class="emoji">💬</div>
+        <h4>Chat Coding</h4>
+        <p>ChatGPT. "Build me a..."</p>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-node" style="border-color: var(--accent2);">
+        <div class="year">2024</div>
+        <div class="emoji">🖥️</div>
+        <h4>AI-Native IDEs</h4>
+        <p>Cursor, Windsurf. Code with AI.</p>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-node" style="border-color: var(--green);">
+        <div class="year">2025</div>
+        <div class="emoji">🤖</div>
+        <h4>Agents</h4>
+        <p>Claude Code, Codex. AI does the work.</p>
+      </div>
+    </div>
+    <p style="margin-top: 24px; font-size: 1.2rem; color: var(--muted);">
+      We went from <span class="white">"help me type"</span> to <span class="white">"build the whole thing"</span> in 4 years.
+    </p>
+  </div>
+
+  <!-- 15: THE MODELS -->
+  <div class="slide">
+    <h2>The Models</h2>
+    <h3>The brains behind everything. Pick the right one.</h3>
+    <div class="layers" style="max-width: 1000px;">
+      <div class="layer-card" style="border-color: var(--accent);">
+        <div class="emoji">🟣</div>
+        <h4>Claude</h4>
+        <p>Best at code right now. Sonnet for speed, Opus for complex tasks.</p>
+        <div class="sub">Anthropic · 200K context</div>
+      </div>
+      <div class="layer-card" style="border-color: var(--green);">
+        <div class="emoji">🟢</div>
+        <h4>GPT-4o / o3</h4>
+        <p>Great all-rounder. o3 for reasoning-heavy tasks.</p>
+        <div class="sub">OpenAI · 128K context</div>
+      </div>
+      <div class="layer-card" style="border-color: var(--accent2);">
+        <div class="emoji">🔵</div>
+        <h4>Gemini</h4>
+        <p>Huge context window. Good for large codebases.</p>
+        <div class="sub">Google · 1M+ context</div>
+      </div>
+    </div>
+    <p style="margin-top: 20px; font-size: 1.2rem; color: var(--muted);">
+      The model matters less than <span class="white">how you use it</span>. They're all good enough.
+    </p>
+  </div>
+
+  <!-- 16: TOOL CATEGORIES -->
+  <div class="slide">
+    <h2>The Tools</h2>
+    <h3>4 categories. Each works differently.</h3>
+    <div class="layers">
+      <div class="layer-card" style="border-color: var(--pink);">
+        <div class="emoji">💬</div>
+        <h4>Chat / GUI</h4>
+        <p>Paste code in, get code back. Lowest barrier.</p>
+        <div class="rec">ChatGPT, Claude.ai</div>
+      </div>
+      <div class="layer-card" style="border-color: var(--orange);">
+        <div class="emoji">🎨</div>
+        <h4>Generators</h4>
+        <p>Describe it, get a full app. Visual-first.</p>
+        <div class="rec">v0, Bolt, Lovable</div>
+      </div>
+      <div class="layer-card" style="border-color: var(--accent);">
+        <div class="emoji">⌨️</div>
+        <h4>AI IDEs</h4>
+        <p>Code editor with AI built in. You're still driving.</p>
+        <div class="rec">Cursor, Windsurf</div>
+      </div>
+      <div class="layer-card" style="border-color: var(--green);">
+        <div class="emoji">🤖</div>
+        <h4>CLI Agents</h4>
+        <p>AI works in your terminal. Reads files, runs commands.</p>
+        <div class="rec">Claude Code, Codex</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17: CHAT & GENERATORS -->
+  <div class="slide">
+    <h2>💬 Chat & Generators</h2>
+    <h3>Great for starting. Limited for finishing.</h3>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>ChatGPT</h4>
+        <p>The OG. Good for explaining, brainstorming, quick snippets.</p>
+        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">Free tier</div>
+      </div>
+      <div class="tool-card">
+        <h4>Claude.ai</h4>
+        <p>Better at code than GPT. Artifacts feature = instant preview.</p>
+        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Best for code</div>
+      </div>
+      <div class="tool-card">
+        <h4>v0 by Vercel</h4>
+        <p>Describe a UI → get React components. Stunning for frontends.</p>
+        <div class="tool-tag" style="background: rgba(236,72,153,0.15); color: var(--pink);">UI focused</div>
+      </div>
+      <div class="tool-card">
+        <h4>Bolt.new</h4>
+        <p>Full-stack in the browser. Deploys instantly. Magic for prototypes.</p>
+        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Full stack</div>
+      </div>
+      <div class="tool-card">
+        <h4>Lovable</h4>
+        <p>Similar to Bolt. "Build me an app" → working deploy.</p>
+        <div class="tool-tag" style="background: rgba(239,68,68,0.15); color: var(--red);">App builder</div>
+      </div>
+      <div class="tool-card">
+        <h4>Replit Agent</h4>
+        <p>AI builds + runs + deploys in Replit. Good for quick experiments.</p>
+        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">All-in-one</div>
+      </div>
+    </div>
+    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
+      ⚠️ These hit a wall on complex apps. Great for <span class="white">starting</span>, not for <span class="white">scaling</span>.
+    </p>
+  </div>
+
+  <!-- 18: AI IDEs -->
+  <div class="slide">
+    <h2>⌨️ AI-Native IDEs</h2>
+    <h3>You're still the pilot. AI is your copilot.</h3>
+    <div class="tool-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="tool-card" style="border-color: var(--accent);">
+        <h4>Cursor</h4>
+        <p>VS Code fork with AI superpowers. Tab to autocomplete, ⌘K to edit, chat for bigger changes. The industry standard right now.</p>
+        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Most popular</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--accent2);">
+        <h4>Windsurf</h4>
+        <p>By Codeium. Similar to Cursor. "Cascade" feature chains edits across files. Strong free tier.</p>
+        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">Free option</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--green);">
+        <h4>GitHub Copilot</h4>
+        <p>The original. Lives in VS Code. Great autocomplete, getting smarter with agent mode.</p>
+        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">VS Code native</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--orange);">
+        <h4>Zed</h4>
+        <p>Blazing fast editor with AI assistant built in. For people who care about performance.</p>
+        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Fast</div>
+      </div>
+    </div>
+    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
+      Best for: <span class="white">real projects where you need control</span>. You see every line. You approve every change.
+    </p>
+  </div>
+
+  <!-- 19: CLI AGENTS -->
+  <div class="slide">
+    <h2>🤖 CLI Agents & Platforms</h2>
+    <h3>The AI doesn't just suggest — it does the work.</h3>
+    <div class="tool-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="tool-card" style="border-color: var(--accent);">
+        <h4>Claude Code</h4>
+        <p>Anthropic's CLI agent. Reads your codebase, writes files, runs tests. Like a junior dev in your terminal.</p>
+        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Terminal agent</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--green);">
+        <h4>Codex (OpenAI)</h4>
+        <p>OpenAI's coding agent. Sandboxed. Runs in its own environment. Good for isolated tasks.</p>
+        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">Sandboxed</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--accent2);">
+        <h4>Aider</h4>
+        <p>Open source CLI. Works with any model. Git-integrated — every change is a commit.</p>
+        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">Open source</div>
+      </div>
+      <div class="tool-card" style="border-color: var(--orange);">
+        <h4>OpenClaw</h4>
+        <p>Multi-agent platform. Your AI agents coordinate, use tools, browse the web, deploy. The full autopilot.</p>
+        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Multi-agent</div>
+      </div>
+    </div>
+    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
+      This is where it gets serious. The AI <span class="white">reads, writes, tests, and ships</span>. You review.
+    </p>
+  </div>
+
+  <!-- 20: HOW TO PICK -->
+  <div class="slide">
+    <h2>Which One Should You Use?</h2>
+    <h3>Depends on what you're building and who you are.</h3>
+    <div class="v-stack">
+      <div class="v-card" style="border-color: var(--pink);">
+        <div class="emoji">🌱</div>
+        <div>
+          <h4>"I'm just starting"</h4>
+          <p><span class="white">ChatGPT or Claude.ai</span> → Bolt or v0 for prototypes → <span class="white">Cursor</span> when you're ready for real projects</p>
+        </div>
+      </div>
+      <div class="v-card" style="border-color: var(--accent);">
+        <div class="emoji">💻</div>
+        <div>
+          <h4>"I can code a bit"</h4>
+          <p><span class="white">Cursor or Windsurf</span> as your daily driver → Claude Code for bigger refactors → v0 for quick UIs</p>
+        </div>
+      </div>
+      <div class="v-card" style="border-color: var(--green);">
+        <div class="emoji">🏗️</div>
+        <div>
+          <h4>"I'm a developer"</h4>
+          <p><span class="white">Claude Code + Cursor</span> combo → Aider for open-source → OpenClaw to orchestrate multiple agents on a project</p>
+        </div>
+      </div>
+      <div class="v-card" style="border-color: var(--orange);">
+        <div class="emoji">🚀</div>
+        <div>
+          <h4>"I want to ship FAST"</h4>
+          <p><span class="white">Bolt or Lovable</span> for v1 → move to Cursor when you outgrow it → never hand-write boilerplate again</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== BRINGING IT TOGETHER ==================== -->
+
+  <!-- 21: THE COMBO -->
+  <div class="slide">
+    <p class="huge-text">
+      <span class="white">Knowledge</span> tells you<br>
+      <em>what</em> to build.<br><br>
+      <span class="gradient-text">Tools</span> build it<br>
+      10x faster.
+    </p>
+    <p style="margin-top: 24px; font-size: 1.5rem; color: var(--muted);">
+      One without the other? <span class="white">You're stuck.</span>
+    </p>
+  </div>
+
+  <!-- 22: WHAT AI GETS WRONG -->
+  <div class="slide">
+    <h2>Things AI Gets <span class="red">Confidently</span> Wrong</h2>
+    <h3>Regardless of which tool you use</h3>
     <div class="v-stack">
       <div class="v-card">
         <div class="emoji">🔓</div>
         <div>
-          <h4>Security?  Nah.</h4>
-          <p>API keys in frontend code. No input validation. Auth that looks right but isn't.</p>
+          <h4>Security</h4>
+          <p>API keys in frontend. No input validation. Auth that looks right but isn't. <span class="red">Every. Single. Time.</span></p>
         </div>
       </div>
       <div class="v-card">
         <div class="emoji">🎭</div>
         <div>
           <h4>Fake packages</h4>
-          <p>"npm install super-auth-helper" — that package doesn't exist. The AI made it up. It does this a lot.</p>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="emoji">📦</div>
-        <div>
-          <h4>Kubernetes for your todo app</h4>
-          <p>AI loves over-engineering. Microservices, Docker Compose, Redis caching — for 3 users. Just... no.</p>
+          <p>"npm install super-auth-pro" — doesn't exist. The AI invented it. Happens more than you'd think.</p>
         </div>
       </div>
       <div class="v-card">
         <div class="emoji">🍝</div>
         <div>
-          <h4>Spaghetti architecture</h4>
-          <p>It writes code that works RIGHT NOW. Not code that works when you add the next feature.</p>
+          <h4>Architecture</h4>
+          <p>Code that works NOW but falls apart when you add the next feature. No separation. No plan.</p>
+        </div>
+      </div>
+      <div class="v-card">
+        <div class="emoji">📦</div>
+        <div>
+          <h4>Over-engineering</h4>
+          <p>Kubernetes for a todo app. Microservices for 3 users. Redis cache for a blog. Just... no.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 13: PERSONAL STORY -->
-  <div class="slide">
-    <h3 class="muted">True story</h3>
-    <div class="quote" style="margin-top: 16px;">
-      I once let Cursor write an entire auth system for a client project. Looked perfect. Worked in dev. 
-      Shipped it.<br><br>
-      Turned out any user could see any other user's data by changing one number in the URL.<br><br>
-      <span class="red">Knowledge would have caught that in 10 seconds.</span>
-      <span class="attr">— the kind of mistake you only make once</span>
-    </div>
-  </div>
-
-  <!-- 14: HOW I ACTUALLY PROMPT -->
-  <div class="slide">
-    <h2>How I Actually Prompt</h2>
-    <h3>Not a framework. Just how I think before I type.</h3>
-    <div class="prompt-box" style="font-size: 1.1rem;">
-      <div class="prompt-label">my actual process</div>
-      <span class="accent">1. What's the data?</span><br>
-      &nbsp;&nbsp;&nbsp;"Users have projects. Projects have tasks. Tasks have status + assignee."<br><br>
-      <span class="accent2">2. What's the flow?</span><br>
-      &nbsp;&nbsp;&nbsp;"Sign up → create project → add tasks → drag to done."<br><br>
-      <span class="green">3. What do I NOT need yet?</span><br>
-      &nbsp;&nbsp;&nbsp;"No teams. No billing. No notifications. Just tasks."<br><br>
-      <span class="orange">4. What tools?</span><br>
-      &nbsp;&nbsp;&nbsp;"Next.js 15, Convex, Tailwind, shadcn/ui. Nothing else."
-    </div>
-    <p style="margin-top: 16px; font-size: 1.2rem; color: var(--muted);">
-      The AI fills in the rest. But it needs YOU to set the boundaries.
-    </p>
-  </div>
-
-  <!-- 15: CONFESSIONS -->
+  <!-- 23: CONFESSIONS -->
   <div class="slide">
     <h2>Confession Time</h2>
-    <h3 class="muted">Things I still do after 10 years</h3>
+    <h3 class="muted">Things I still do after 10 years and an MSc</h3>
     <ul class="confession-list" style="margin-top: 16px;">
       <li>Google "flexbox center div" at least once a week</li>
-      <li>Copy-paste regex from Stack Overflow without understanding it</li>
-      <li>Ask AI to write my SQL queries (they're usually wrong)</li>
+      <li>Copy-paste regex without understanding it</li>
+      <li>Ask AI to write SQL then rewrite it myself anyway</li>
       <li>Forget how git rebase works every single time</li>
-      <li>Spend 2 hours on a bug that was a typo</li>
+      <li>Spend 2 hours on a bug that turns out to be a typo</li>
     </ul>
     <p style="margin-top: 24px; font-size: 1.4rem;">
       <span class="white">The point isn't knowing everything.</span><br>
@@ -716,7 +938,7 @@
     </p>
   </div>
 
-  <!-- 16: MY STACK -->
+  <!-- 24: MY STACK -->
   <div class="slide">
     <h2>What I'd Use Tomorrow</h2>
     <h3>If I had to ship a product in a weekend</h3>
@@ -724,44 +946,36 @@
       <div class="layer-card" style="border-color: var(--accent);">
         <div class="emoji">⚛️</div>
         <h4>Next.js 15</h4>
-        <p>AI knows it best. Huge community. Just works.</p>
+        <p>AI knows it best. Huge community.</p>
         <div class="rec">Expo for mobile</div>
       </div>
       <div class="layer-card" style="border-color: var(--accent2);">
         <div class="emoji">🔄</div>
         <h4>Convex</h4>
-        <p>Backend + DB in one. Real-time. TypeScript. No SQL headaches.</p>
+        <p>Backend + DB. Real-time. TypeScript.</p>
         <div class="rec">or Supabase</div>
       </div>
       <div class="layer-card" style="border-color: var(--green);">
         <div class="emoji">🔐</div>
         <h4>Clerk</h4>
-        <p>Auth solved forever. Google login, email, MFA. 5 minutes.</p>
-        <div class="rec">don't build auth</div>
+        <p>Auth in 5 minutes. Don't build this.</p>
+        <div class="rec">seriously, don't</div>
       </div>
       <div class="layer-card" style="border-color: var(--orange);">
         <div class="emoji">💳</div>
         <h4>Stripe</h4>
-        <p>Checkout page → webhook → DB update. Payments done.</p>
-        <div class="rec">seriously, just Stripe</div>
+        <p>Checkout → webhook → done.</p>
+        <div class="rec">just Stripe</div>
       </div>
     </div>
-  </div>
-
-  <!-- 17: THE REAL CHEAT CODE -->
-  <div class="slide">
-    <p class="huge-text">
-      The <span class="gradient-text">real cheat code</span>:<br><br>
-    </p>
-    <p class="big-text">
-      <span class="white">Understand the shape of the system.</span><br>
-      <span class="white">Let AI fill in the details.</span><br>
-      <span class="white">Review everything it gives you.</span><br><br>
-      <span class="muted">That's it. That's the talk.</span>
+    <p style="margin-top: 20px; font-size: 1.1rem; color: var(--muted);">
+      Built with: <span class="white">Cursor + Claude Code</span> · Deployed on <span class="white">Vercel</span> · Done in a weekend.
     </p>
   </div>
 
-  <!-- 18: WORKSHOP INTRO -->
+  <!-- ==================== WORKSHOP ==================== -->
+
+  <!-- 25: WORKSHOP -->
   <div class="slide">
     <h1>🛠️ Let's Build</h1>
     <div class="divider"></div>
@@ -773,12 +987,12 @@
       <div class="workshop-step">
         <div class="step-num">1</div>
         <h4>Think First</h4>
-        <p>What's your data? What's the flow? Write it down in 2 minutes.</p>
+        <p>What's your data? What's the flow? 2 minutes on paper.</p>
       </div>
       <div class="workshop-step">
         <div class="step-num">2</div>
-        <h4>Prompt Smart</h4>
-        <p>Use what we talked about. Be specific. Constrain the AI.</p>
+        <h4>Pick a Tool</h4>
+        <p>Any tool from what we covered. Match it to your level.</p>
       </div>
       <div class="workshop-step">
         <div class="step-num">3</div>
@@ -788,7 +1002,7 @@
     </div>
   </div>
 
-  <!-- 19: CHALLENGE -->
+  <!-- 26: CHALLENGE -->
   <div class="slide">
     <h2>🎯 Pick Your Challenge</h2>
     <div class="stack-grid" style="margin-top: 24px;">
@@ -810,12 +1024,11 @@
       </div>
     </div>
     <p style="margin-top: 24px; font-size: 1.3rem; color: var(--muted);">
-      Use <span class="white">any tool</span> — Cursor, Bolt, v0, Claude, Copilot, ChatGPT.<br>
-      The tool doesn't matter. <span class="white">Your thinking does.</span>
+      Remember: <span class="white">think first, then prompt</span>. The tool doesn't matter. Your thinking does.
     </p>
   </div>
 
-  <!-- 20: TAKEAWAY -->
+  <!-- 27: TAKEAWAY -->
   <div class="slide">
     <div class="quote" style="font-size: 2.2rem; border-left-color: var(--accent2);">
       The best vibe coders<br>
@@ -825,12 +1038,12 @@
     </div>
   </div>
 
-  <!-- 21: THANK YOU -->
+  <!-- 28: THANKS -->
   <div class="slide">
     <h1 class="gradient-text">Thanks.</h1>
     <p class="big-text" style="margin-top: 16px;">
       Ahmed Afify<br>
-      <span class="muted" style="font-size: 1.2rem;">MSc CS · Building for 10 years · Still vibing</span>
+      <span class="muted" style="font-size: 1.2rem;">MSc CS · 10 years building · Still vibing</span>
     </p>
     <div style="margin-top: 32px;">
       <span class="tag purple">@aafify</span>
