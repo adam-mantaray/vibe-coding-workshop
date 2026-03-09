@@ -8,20 +8,20 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --bg: #F5F0E8;
-      --surface: #FDFAF5;
-      --border: #E2D9CC;
-      --text: #1A1714;
-      --muted: #7A7060;
-      --accent: #C96442;
-      --al: rgba(201,100,66,0.08);
-      --ab: rgba(201,100,66,0.2);
+      --bg: #EEF4F3;
+      --surface: #FFFFFF;
+      --border: #D4E4E2;
+      --text: #0F2E2C;
+      --muted: #5A7A78;
+      --accent: #1E6B64;
+      --al: rgba(30,107,100,0.07);
+      --ab: rgba(30,107,100,0.18);
       --mono: 'JetBrains Mono', monospace;
     }
     body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
     body::before {
       content:''; position:fixed; inset:0;
-      background-image:radial-gradient(circle,rgba(0,0,0,0.06) 1px,transparent 1px);
+      background-image:radial-gradient(circle,rgba(30,107,100,0.08) 1px,transparent 1px);
       background-size:32px 32px; pointer-events:none; z-index:0;
     }
     .deck { width:100%; height:100vh; position:relative; }
@@ -327,11 +327,11 @@
       <div class="clabel">Two rules — no exceptions</div>
       <div class="rrow">
         <div class="rm ryes">1</div>
-        <div>Build backend functions <strong style="color:var(--text)">in parallel</strong> with the frontend. Never at the end — you will regret it.</div>
+        <div>Build backend functions <strong style="color:var(--text)">in parallel</strong> with the frontend — it's easier to wire things up as you go than to retrofit later.</div>
       </div>
       <div class="rrow">
-        <div class="rm rno">X</div>
-        <div><strong style="color:var(--text)">No mock data. Ever.</strong> Hard-coded data will break every feature you build after it.</div>
+        <div class="rm ryes">2</div>
+        <div>Avoid mock data where possible — real data connections from the start make testing more reliable and reduce surprises down the line.</div>
       </div>
     </div>
   </div>
@@ -341,7 +341,7 @@
 <div class="slide">
   <div class="eye">Step 5 — Deploy + Iterate · 50–60 min</div>
   <h2>Deploy first. <em>Then fix.</em></h2>
-  <p class="lead">First pass is always ~75% there. That is fine. Ship it, get a live URL, then iterate on the real thing — not localhost.</p>
+  <p class="lead">First pass is always ~75% there. Deploy early — it's the fastest way to verify your config is right, catch real-world issues, and share progress with anyone.</p>
   <div class="dcmd"><span>$</span> vercel --prod<small>live in ~30 seconds</small></div>
   <div class="buggs">
     <div class="bugg bugg-bad">
@@ -353,7 +353,7 @@
       <div class="bt">"The timer resets when I click pause. It should stop at the current time and resume from there when I click play again."</div>
     </div>
   </div>
-  <div style="margin-top:16px;font-size:14px;color:var(--muted)">Describe the exact behavior — not just that something is wrong. The AI can't read your mind.</div>
+  <div style="margin-top:16px;font-size:14px;color:var(--muted)">The more specific your prompt, the faster the fix. Describing the exact behavior gives the AI the context it needs to get it right.</div>
 </div>
 
 <!-- 9 · CLOSE -->
@@ -365,9 +365,9 @@
     <div>
       <div class="tkwy"><div class="tn">1</div><div class="tt"><strong>Spec before you build.</strong> Always. 10 minutes of spec saves hours of broken code.</div></div>
       <div class="tkwy"><div class="tn">2</div><div class="tt"><strong>Plan phases and screens.</strong> Phase 1 is core only. Ship it. Then build Phase 2.</div></div>
-      <div class="tkwy"><div class="tn">3</div><div class="tt"><strong>Mockup before you code.</strong> Change pixels, not logic.</div></div>
-      <div class="tkwy"><div class="tn">4</div><div class="tt"><strong>Deploy early, iterate on the live link.</strong> Real apps don't live on localhost.</div></div>
-      <div class="tkwy"><div class="tn">5</div><div class="tt"><strong>Specific prompts get specific fixes.</strong> Describe exact behavior.</div></div>
+      <div class="tkwy"><div class="tn">3</div><div class="tt"><strong>Mockup before you code.</strong> Iterate visually first — it's faster and cheaper than changing real code.</div></div>
+      <div class="tkwy"><div class="tn">4</div><div class="tt"><strong>Deploy early.</strong> It validates your config, surfaces real issues, and lets you share progress easily.</div></div>
+      <div class="tkwy"><div class="tn">5</div><div class="tt"><strong>Be specific in your prompts.</strong> Describe the exact behavior you're seeing and what you expect instead.</div></div>
     </div>
     <div class="hcard">
       <div class="hlbl">Questions after today</div>
