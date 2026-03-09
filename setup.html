@@ -627,58 +627,45 @@
     <div class="step-header" onclick="toggleStep(5)">
       <div class="step-num">6</div>
       <div class="step-title">
-        <h3>Frontend Design Setup</h3>
-        <p>So your app doesn't look like it was built in 2003.</p>
+        <h3>Install the Frontend Design Skill</h3>
+        <p>One command. Makes Claude Code build beautiful UIs by default.</p>
       </div>
       <div class="step-check" id="check-5" onclick="event.stopPropagation(); toggleCheck(5)"></div>
     </div>
     <div class="step-body" id="body-5">
-      <p class="step-intro">One of the biggest beginner mistakes is skipping the design foundation. Without a component library, your AI tool will generate plain, unstyled HTML that's painful to fix later. Set this up once and every project you build will look good from the start.</p>
+
+      <p class="step-intro"><strong>What are Claude Code skills?</strong><br>
+      Skills (also called plugins) are add-ons that extend what Claude Code knows how to do. Think of them like giving Claude a specialist — instead of a generalist who builds okay UIs, you're bringing in someone who has strong opinions about design, layout, and visual quality. Skills activate automatically when relevant — you don't have to do anything special, just prompt as normal.</p>
+
+      <p class="step-intro" style="padding-top:0">Anthropic publishes official skills for common tasks. The <strong>frontend-design</strong> skill is one of the most useful — it stops Claude from generating generic, template-looking interfaces and pushes it toward production-quality design instead.</p>
+
       <div class="substeps">
         <div class="substep">
           <div class="substep-num">1</div>
           <div class="substep-content">
-            <strong>Install Tailwind CSS</strong>
-            <p>Tailwind is a utility-first CSS framework. Your AI tool already knows it extremely well — when you say "make this look clean and modern", Tailwind is what it reaches for.</p>
+            <strong>Install the official Anthropic frontend-design skill</strong>
+            <p>Run this once after installing Claude Code. It installs globally so it works across all your projects.</p>
             <div class="code">
               <button class="copy-btn" onclick="copyCode(this)">copy</button>
-              <span class="comment"># Inside your project folder:</span><br>
-              <span class="cmd">npm install -D tailwindcss postcss autoprefixer</span><br>
-              <span class="cmd">npx tailwindcss init -p</span>
+              <span class="cmd">claude plugin install frontend-design</span><br>
+              <span class="comment"># Should print: ✔ Successfully installed plugin: frontend-design</span>
             </div>
-            <a href="https://tailwindcss.com/docs/installation" target="_blank" class="link-btn" style="margin-top:8px">→ Tailwind docs</a>
           </div>
         </div>
         <div class="substep">
           <div class="substep-num">2</div>
           <div class="substep-content">
-            <strong>Add shadcn/ui for ready-made components</strong>
-            <p>shadcn/ui gives you beautiful, accessible components (buttons, forms, modals, tables) that plug directly into your project. Works with React and Next.js. Your AI tool can generate full pages using these in seconds.</p>
+            <strong>That's it — it activates automatically</strong>
+            <p>Whenever you ask Claude Code to build a UI, the skill kicks in on its own. No special syntax needed. Just prompt normally:</p>
             <div class="code">
-              <button class="copy-btn" onclick="copyCode(this)">copy</button>
-              <span class="comment"># For a Next.js project:</span><br>
-              <span class="cmd">npx shadcn@latest init</span><br><br>
-              <span class="comment"># Add components as you need them:</span><br>
-              <span class="cmd">npx shadcn@latest add button card input</span>
+              <span class="str">"Build a dashboard with a sidebar, stats cards, and a recent activity feed"</span>
             </div>
-            <a href="https://ui.shadcn.com/docs/installation" target="_blank" class="link-btn" style="margin-top:8px">→ shadcn/ui docs</a>
-          </div>
-        </div>
-        <div class="substep">
-          <div class="substep-num">3</div>
-          <div class="substep-content">
-            <strong>Tell your AI about your stack</strong>
-            <p>Once set up, start your prompts with context so the AI generates the right code from the start:</p>
-            <div class="code">
-              <span class="comment"># Example prompt opener:</span><br>
-              <span class="str">"I'm building a Next.js app with Tailwind CSS and shadcn/ui.
-Use shadcn components for all UI. Keep everything clean and minimal."</span>
-            </div>
+            <p style="padding-top:8px">Claude will now apply design principles — spacing, typography, color, visual hierarchy — rather than dumping unstyled HTML.</p>
           </div>
         </div>
       </div>
       <div class="tip">
-        <strong>💡 Don't set this up mid-project.</strong> Add Tailwind and shadcn at the very beginning — retrofitting them into an existing project is painful. On the day, we'll start every project with these in place from prompt one.
+        <strong>💡 Only applies to Claude Code users.</strong> If you're using Cursor, Lovable, or another tool — don't worry about this step, it doesn't apply to you.
       </div>
     </div>
   </div>
@@ -692,7 +679,7 @@ Use shadcn components for all UI. Keep everything clean and minimal."</span>
       <div class="summary-item" id="sum-2"><div class="dot"></div> Vercel account + CLI installed</div>
       <div class="summary-item" id="sum-3"><div class="dot"></div> Convex account + CLI installed</div>
       <div class="summary-item" id="sum-4"><div class="dot"></div> AI coding tool installed and logged in</div>
-      <div class="summary-item" id="sum-5"><div class="dot"></div> Familiar with Tailwind + shadcn/ui</div>
+      <div class="summary-item" id="sum-5"><div class="dot"></div> frontend-design skill installed (<code style="font-size:12px">claude plugin install frontend-design</code>)</div>
     </div>
     <div class="final-msg">
       <strong>Come with your laptop, your setup done, and something you want to build.</strong> The session is hands-on from minute one — the more prepared you are, the more you'll get out of it. See you there. 🚀
