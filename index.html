@@ -6,9 +6,7 @@
   <title>Vibecoding 101</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     :root {
       --bg: #F5F0E8;
       --surface: #FDFAF5;
@@ -16,778 +14,371 @@
       --text: #1A1714;
       --muted: #7A7060;
       --accent: #C96442;
-      --accent-light: rgba(201,100,66,0.07);
-      --accent-border: rgba(201,100,66,0.18);
+      --al: rgba(201,100,66,0.08);
+      --ab: rgba(201,100,66,0.2);
       --mono: 'JetBrains Mono', monospace;
     }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .deck { width: 100%; height: 100vh; position: relative; }
-
-    .slide {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 64px 96px;
-      opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      pointer-events: none;
-    }
-
-    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
-    .slide.exit { opacity: 0; transform: translateX(-40px); }
-
-    /* subtle dot grid bg */
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-      z-index: 0;
+      content:''; position:fixed; inset:0;
+      background-image:radial-gradient(circle,rgba(0,0,0,0.06) 1px,transparent 1px);
+      background-size:32px 32px; pointer-events:none; z-index:0;
     }
-
-    .slide { z-index: 1; }
-
-    /* Nav */
-    .nav {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 100;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 8px 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    .deck { width:100%; height:100vh; position:relative; }
+    .slide {
+      position:absolute; inset:0; z-index:1;
+      display:flex; flex-direction:column; justify-content:center;
+      padding:56px 88px;
+      opacity:0; transform:translateX(36px);
+      transition:opacity 0.38s ease,transform 0.38s ease;
+      pointer-events:none;
     }
+    .slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+    .slide.exit { opacity:0; transform:translateX(-36px); }
 
-    .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--border);
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-
-    .dot.active { background: var(--accent); width: 18px; border-radius: 3px; }
-
-    .nbtn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 0 4px;
-      transition: color 0.2s;
-    }
-
-    .nbtn:hover { color: var(--accent); }
-
-    .sep { width: 1px; height: 14px; background: var(--border); }
-
-    .counter {
-      position: fixed;
-      top: 24px; right: 32px;
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      z-index: 100;
-    }
-
+    /* chrome */
     .brand {
-      position: fixed;
-      top: 24px; left: 32px;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      z-index: 100;
+      position:fixed; top:22px; left:28px;
+      font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--muted); z-index:100;
     }
-
-    .brand em { color: var(--accent); font-style: normal; }
-
-    /* ── Shared ── */
-    .eyebrow {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 20px;
+    .brand em { color:var(--accent); font-style:normal; }
+    .ctr {
+      position:fixed; top:22px; right:28px;
+      font-size:11px; font-weight:600; color:var(--muted); z-index:100;
     }
-
-    .h1 {
-      font-size: clamp(42px, 5vw, 68px);
-      font-weight: 900;
-      letter-spacing: -0.035em;
-      line-height: 1.02;
-      margin-bottom: 20px;
+    .nav {
+      position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:10px; z-index:100;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:100px; padding:8px 18px;
+      box-shadow:0 2px 16px rgba(0,0,0,0.07);
     }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--border); cursor:pointer; transition:all 0.25s; }
+    .dot.active { background:var(--accent); width:20px; border-radius:4px; }
+    .nbtn { background:none; border:none; color:var(--muted); cursor:pointer; font:600 12px 'Inter',sans-serif; padding:0 4px; transition:color 0.2s; }
+    .nbtn:hover { color:var(--accent); }
+    .sep { width:1px; height:14px; background:var(--border); }
 
-    .h1 em { color: var(--accent); font-style: normal; }
+    /* shared */
+    .eye { font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+    h1 { font-size:clamp(52px,6.5vw,84px); font-weight:900; letter-spacing:-0.04em; line-height:1.0; margin-bottom:24px; }
+    h1 em { color:var(--accent); font-style:normal; }
+    h2 { font-size:clamp(38px,4.8vw,60px); font-weight:900; letter-spacing:-0.035em; line-height:1.05; margin-bottom:12px; }
+    h2 em { color:var(--accent); font-style:normal; }
+    .lead { font-size:17px; color:var(--muted); line-height:1.7; max-width:580px; margin-bottom:36px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px; }
+    .clabel { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+    a { color:var(--accent); text-decoration:none; }
+    .btn { display:inline-block; background:var(--accent); color:#fff; padding:11px 22px; border-radius:9px; font-size:14px; font-weight:700; text-decoration:none; }
 
-    .h2 {
-      font-size: clamp(30px, 3.6vw, 48px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.08;
-      margin-bottom: 8px;
+    /* ── S1 TITLE ── */
+    .s1 { display:grid; grid-template-columns:1fr 360px; gap:56px; align-items:center; }
+    .stats { display:flex; gap:48px; margin-top:12px; }
+    .snum { font-size:40px; font-weight:900; letter-spacing:-0.04em; }
+    .snum em { color:var(--accent); font-style:normal; font-size:28px; }
+    .slbl { font-size:12px; color:var(--muted); font-weight:500; margin-top:2px; }
+    .steps { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+    .step { display:flex; align-items:center; gap:16px; padding:16px 22px; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:none; }
+    .stepn {
+      width:28px; height:28px; border-radius:7px;
+      background:var(--al); border:1px solid var(--ab);
+      color:var(--accent); font-size:12px; font-weight:800;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
     }
+    .stepl { font-size:14px; font-weight:600; flex:1; }
+    .stept { font-size:11px; color:var(--muted); font-family:var(--mono); }
 
-    .h2 em { color: var(--accent); font-style: normal; }
+    /* ── S2 ABOUT ── */
+    .about { display:grid; grid-template-columns:1fr 300px; gap:64px; align-items:center; }
+    .about-rows { display:flex; flex-direction:column; gap:12px; margin-bottom:32px; }
+    .about-row { display:flex; align-items:center; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 20px; }
+    .about-n { font-size:22px; font-weight:900; letter-spacing:-0.03em; color:var(--accent); flex-shrink:0; width:52px; }
+    .about-l { font-size:14px; font-weight:600; color:var(--text); }
 
-    .lead {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 520px;
-      margin-bottom: 40px;
+    /* ── S3 AGENDA ── */
+    .agrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .ag { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px; }
+    .agt { font-family:var(--mono); font-size:11px; color:var(--accent); margin-bottom:10px; }
+    .agh { font-size:16px; font-weight:700; margin-bottom:6px; }
+    .agd { font-size:13px; color:var(--muted); line-height:1.55; }
+
+    /* ── S4 SPEC ── */
+    .twocol { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .code-box {
+      background:#1C1812; border-radius:10px; padding:18px 22px;
+      font-family:var(--mono); font-size:13px; color:#D4C9B8; line-height:1.85;
     }
+    .code-box .s { color:#A8C8A0; }
 
-    .rule { height: 1px; background: var(--border); margin: 24px 0; }
-
-    /* Code */
-    .code-block {
-      background: #1C1812;
-      border-radius: 10px;
-      padding: 16px 20px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: #D4C9B8;
-      line-height: 1.8;
-      position: relative;
+    /* ── S5 PHASES ── */
+    .phases { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .phase-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:26px; }
+    .ptag {
+      display:inline-block; background:var(--al); border:1px solid var(--ab);
+      color:var(--accent); padding:3px 12px; border-radius:100px;
+      font-size:11px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase;
+      margin-bottom:14px;
     }
+    .phase-card h3 { font-size:18px; font-weight:800; margin-bottom:10px; }
+    .phase-item { font-size:14px; color:var(--muted); line-height:1.7; padding:6px 0; border-bottom:1px solid var(--border); }
+    .phase-item:last-child { border-bottom:none; }
+    .phase-item strong { color:var(--text); }
 
-    .code-block .c { color: #4A4438; }
-    .code-block .k { color: #E8A87C; }
-    .code-block .s { color: #A8C8A0; }
+    /* ── S6 MOCKUPS ── */
+    .flow4 { display:grid; grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr; align-items:center; gap:6px; margin-bottom:18px; }
+    .fs { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 16px; text-align:center; }
+    .fnum { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+    .ftitle { font-size:15px; font-weight:700; margin-bottom:6px; }
+    .fdesc { font-size:12px; color:var(--muted); line-height:1.55; }
+    .farrow { text-align:center; font-size:22px; font-weight:700; color:var(--accent); opacity:0.4; }
+    .fnote { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:14px 18px; font-size:14px; color:var(--muted); line-height:1.6; }
+    .fnote strong { color:var(--text); }
 
-    /* ── SLIDE 1 ── */
-    .s1-layout {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 48px;
-      align-items: center;
+    /* ── S7 BUILD ── */
+    .build2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .stags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+    .stag { background:var(--al); border:1px solid var(--ab); color:var(--accent); padding:5px 14px; border-radius:100px; font-size:13px; font-weight:700; }
+    .rrow { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; font-size:14px; color:var(--muted); line-height:1.65; }
+    .rm { width:22px; height:22px; border-radius:5px; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .rno { background:rgba(220,38,38,0.08); color:#DC2626; border:1px solid rgba(220,38,38,0.2); }
+    .ryes { background:rgba(45,106,79,0.08); color:#2D6A4F; border:1px solid rgba(45,106,79,0.2); }
+
+    /* ── S8 DEPLOY ── */
+    .dcmd {
+      background:#1C1812; border-radius:12px; padding:18px 24px;
+      font-family:var(--mono); font-size:16px; color:#A8C8A0;
+      display:flex; align-items:center; gap:14px; margin-bottom:20px;
     }
+    .dcmd span { color:#4A4438; }
+    .dcmd small { margin-left:auto; color:#4A4438; font-size:12px; }
+    .buggs { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .bugg { border-radius:12px; padding:22px; font-family:var(--mono); font-size:13px; line-height:1.7; }
+    .bugg-bad { background:rgba(220,38,38,0.04); border:1px solid rgba(220,38,38,0.15); }
+    .bugg-good { background:rgba(45,106,79,0.04); border:1px solid rgba(45,106,79,0.15); }
+    .blbl { font-family:'Inter',sans-serif; font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px; }
+    .bugg-bad .blbl { color:#DC2626; }
+    .bugg-good .blbl { color:#2D6A4F; }
+    .bugg .bt { color:var(--muted); }
 
-    .s1-stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 8px;
-    }
-
-    .stat-n {
-      font-size: 32px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--text);
-    }
-
-    .stat-n em { color: var(--accent); font-style: normal; font-size: 22px; }
-    .stat-l { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 2px; }
-
-    .s1-steps {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .s1-step {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .s1-step:last-child { border-bottom: none; }
-
-    .s1-step-num {
-      width: 24px; height: 24px;
-      border-radius: 6px;
-      background: var(--accent-light);
-      border: 1px solid var(--accent-border);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .s1-step-label { font-size: 13px; font-weight: 600; }
-    .s1-step-time { margin-left: auto; font-size: 11px; color: var(--muted); font-family: var(--mono); }
-
-    /* ── SLIDE 2 ── */
-    .agenda-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .ag {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-    }
-
-    .ag-t {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .ag-h { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .ag-d { font-size: 12px; color: var(--muted); line-height: 1.55; }
-
-    /* ── SLIDE 3 ── */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px;
-    }
-
-    .card-label {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 14px;
-    }
-
-    .card p, .card li {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .card ul { padding-left: 14px; }
-    .card li { margin-bottom: 6px; }
-    .card strong { color: var(--text); }
-
-    /* ── SLIDE 4 ── */
-    .flow {
-      display: grid;
-      grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .flow-step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 14px;
-      text-align: center;
-    }
-
-    .flow-label { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-    .flow-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-    .flow-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
-    .flow-arrow { text-align: center; color: var(--border); font-size: 18px; font-weight: 300; }
-
-    .note {
-      background: var(--surface);
-      border-left: 2px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      border: 1px solid var(--border);
-      border-left: 2px solid var(--accent);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .note strong { color: var(--text); }
-
-    /* ── SLIDE 5 ── */
-    .build-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .stack-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-
-    .stag {
-      background: var(--accent-light);
-      border: 1px solid var(--accent-border);
-      color: var(--accent);
-      padding: 3px 10px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .rule-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .rule-mark {
-      width: 18px; height: 18px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .rule-no { background: rgba(220,38,38,0.08); color: #DC2626; border: 1px solid rgba(220,38,38,0.2); }
-    .rule-yes { background: rgba(45,106,79,0.08); color: #2D6A4F; border: 1px solid rgba(45,106,79,0.2); }
-
-    /* ── SLIDE 6 ── */
-    .deploy-cmd {
-      background: #1C1812;
-      border-radius: 10px;
-      padding: 14px 20px;
-      font-family: var(--mono);
-      font-size: 14px;
-      color: #A8C8A0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .deploy-cmd span { color: #4A4438; }
-    .deploy-cmd small { margin-left: auto; color: #4A4438; font-size: 11px; }
-
-    .bug-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .bug {
-      border-radius: 10px;
-      padding: 18px;
-      font-size: 13px;
-      line-height: 1.65;
-      font-family: var(--mono);
-    }
-
-    .bug-bad {
-      background: rgba(220,38,38,0.04);
-      border: 1px solid rgba(220,38,38,0.15);
-    }
-
-    .bug-good {
-      background: rgba(45,106,79,0.04);
-      border: 1px solid rgba(45,106,79,0.15);
-    }
-
-    .bug-lbl {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .bug-bad .bug-lbl { color: #DC2626; }
-    .bug-good .bug-lbl { color: #2D6A4F; }
-    .bug .text { color: var(--muted); }
-
-    /* ── SLIDE 7 ── */
-    .s7-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      align-items: start;
-    }
-
-    .takeaway {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      margin-bottom: 14px;
-    }
-
-    .t-num {
-      width: 26px; height: 26px;
-      border-radius: 7px;
-      background: var(--accent-light);
-      border: 1px solid var(--accent-border);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .t-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
-    .t-text strong { color: var(--text); }
-
-    .help-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-    }
-
-    .help-label {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .help-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .help-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .help-link {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .help-link:hover { opacity: 0.85; }
-
-    a { color: var(--accent); }
+    /* ── S9 CLOSE ── */
+    .close2 { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+    .tkwy { display:flex; gap:16px; align-items:flex-start; margin-bottom:18px; }
+    .tn { width:30px; height:30px; border-radius:8px; background:var(--al); border:1px solid var(--ab); color:var(--accent); font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+    .tt { font-size:15px; color:var(--muted); line-height:1.65; }
+    .tt strong { color:var(--text); }
+    .hcard { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; }
+    .hlbl { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .htitle { font-size:22px; font-weight:800; margin-bottom:10px; }
+    .hdesc { font-size:14px; color:var(--muted); line-height:1.65; margin-bottom:24px; }
   </style>
 </head>
 <body>
 
 <div class="brand">Vibecoding <em>101</em></div>
-<div class="counter" id="ctr">1 / 8</div>
+<div class="ctr" id="ctr">1 / 9</div>
 
 <div class="deck">
 
-  <!-- 1. TITLE -->
-  <div class="slide active" id="s0">
-    <div class="s1-layout">
-      <div>
-        <div class="eyebrow">Interactive Workshop</div>
-        <h1 class="h1">Build real things.<br><em>Ship them today.</em></h1>
-        <p class="lead">Hands-on vibecoding — from idea to live app in 1 hour. No experience needed. Just bring your laptop and something you want to build.</p>
-        <div class="s1-stats">
-          <div>
-            <div class="stat-n">1<em>hr</em></div>
-            <div class="stat-l">Idea to deployed</div>
-          </div>
-          <div>
-            <div class="stat-n">0</div>
-            <div class="stat-l">Prior coding needed</div>
-          </div>
-          <div>
-            <div class="stat-n">100<em>%</em></div>
-            <div class="stat-l">Hands-on</div>
-          </div>
-        </div>
+<!-- 1 · TITLE -->
+<div class="slide active">
+  <div class="s1">
+    <div>
+      <div class="eye">Interactive Workshop</div>
+      <h1>Build real things.<br><em>Ship them today.</em></h1>
+      <p class="lead">A hands-on vibecoding workshop — from idea to live deployed app in one hour. Bring your laptop and something you want to build.</p>
+      <div class="stats">
+        <div><div class="snum">1<em>hr</em></div><div class="slbl">Idea to deployed</div></div>
+        <div><div class="snum">5</div><div class="slbl">Steps, done together</div></div>
+        <div><div class="snum">100<em>%</em></div><div class="slbl">Hands-on</div></div>
       </div>
-      <div class="s1-steps">
-        <div class="s1-step">
-          <div class="s1-step-num">1</div>
-          <div class="s1-step-label">Idea + Spec</div>
-          <div class="s1-step-time">0–15m</div>
-        </div>
-        <div class="s1-step">
-          <div class="s1-step-num">2</div>
-          <div class="s1-step-label">Phases + Screens</div>
-          <div class="s1-step-time">15–25m</div>
-        </div>
-        <div class="s1-step">
-          <div class="s1-step-num">3</div>
-          <div class="s1-step-label">Design + Mockups</div>
-          <div class="s1-step-time">25–35m</div>
-        </div>
-        <div class="s1-step">
-          <div class="s1-step-num">4</div>
-          <div class="s1-step-label">Build</div>
-          <div class="s1-step-time">35–50m</div>
-        </div>
-        <div class="s1-step">
-          <div class="s1-step-num">5</div>
-          <div class="s1-step-label">Deploy + Iterate</div>
-          <div class="s1-step-time">50–60m</div>
-        </div>
-      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="stepn">1</div><div class="stepl">Idea + Spec</div><div class="stept">0–15m</div></div>
+      <div class="step"><div class="stepn">2</div><div class="stepl">Phases + Screens</div><div class="stept">15–25m</div></div>
+      <div class="step"><div class="stepn">3</div><div class="stepl">Design + Mockups</div><div class="stept">25–35m</div></div>
+      <div class="step"><div class="stepn">4</div><div class="stepl">Build</div><div class="stept">35–50m</div></div>
+      <div class="step"><div class="stepn">5</div><div class="stepl">Deploy + Iterate</div><div class="stept">50–60m</div></div>
     </div>
   </div>
-
-  <!-- 2. ABOUT -->
-  <div class="slide" id="s-about">
-    <div class="eyebrow">Your Host</div>
-    <div style="display:grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: center;">
-      <div>
-        <h2 class="h2" style="margin-bottom:6px">Ahmed Afify</h2>
-        <p style="font-size:14px; color:var(--accent); font-weight:600; margin-bottom:24px">Founder, <a href="https://mantaray.digital" target="_blank" style="color:var(--accent)">Mantaray Digital</a></p>
-        <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:32px;">
-          <div class="s1-step" style="border-radius:10px; background:var(--surface); border:1px solid var(--border);">
-            <div class="s1-step-num">10+</div>
-            <div class="s1-step-label">Years building software products</div>
-          </div>
-          <div class="s1-step" style="border-radius:10px; background:var(--surface); border:1px solid var(--border);">
-            <div class="s1-step-num">10x</div>
-            <div class="s1-step-label">Team productivity — same people, AI-empowered</div>
-          </div>
-          <div class="s1-step" style="border-radius:10px; background:var(--surface); border:1px solid var(--border);">
-            <div class="s1-step-num">→</div>
-            <div class="s1-step-label">AI amplifies your intelligence — it doesn't replace it</div>
-          </div>
-        </div>
-        <a href="https://aafify.com/about" target="_blank" class="help-link" style="font-size:13px">aafify.com/about</a>
-      </div>
-      <div style="position:relative;">
-        <img src="ahmed.jpg" alt="Ahmed Afify"
-          style="width:300px; height:380px; object-fit:cover; object-position: center top; border-radius:16px; display:block; box-shadow: 0 12px 40px rgba(0,0,0,0.12);" />
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. AGENDA -->
-  <div class="slide" id="s1">
-    <div class="eyebrow">The Plan</div>
-    <h2 class="h2">One hour. <em>Real output.</em></h2>
-    <p class="lead" style="margin-bottom:24px">You build alongside me at every step. Ask questions any time — nothing is a dumb question here.</p>
-    <div class="agenda-grid">
-      <div class="ag">
-        <div class="ag-t">0 – 5 min</div>
-        <div class="ag-h">Intro</div>
-        <div class="ag-d">What vibecoding actually is and why process matters more than the tool</div>
-      </div>
-      <div class="ag">
-        <div class="ag-t">5 – 15 min</div>
-        <div class="ag-h">Idea to Spec</div>
-        <div class="ag-d">Write a PRD with AI. You do it for your own project in parallel.</div>
-      </div>
-      <div class="ag">
-        <div class="ag-t">15 – 25 min</div>
-        <div class="ag-h">Phases + Screens</div>
-        <div class="ag-d">Break your spec into phases. List every screen before touching code.</div>
-      </div>
-      <div class="ag">
-        <div class="ag-t">25 – 35 min</div>
-        <div class="ag-h">Mockups</div>
-        <div class="ag-d">Pick a design style, generate HTML mockups, iterate visually first.</div>
-      </div>
-      <div class="ag">
-        <div class="ag-t">35 – 50 min</div>
-        <div class="ag-h">Build</div>
-        <div class="ag-d">Next.js + Convex. Backend in parallel. No mock data — ever.</div>
-      </div>
-      <div class="ag">
-        <div class="ag-t">50 – 60 min</div>
-        <div class="ag-h">Deploy + Iterate</div>
-        <div class="ag-d">Ship to Vercel first. Test on the live link. Fix from there.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. SPEC -->
-  <div class="slide" id="s2">
-    <div class="eyebrow">Step 1 — 5 to 15 min</div>
-    <h2 class="h2">Start with <em>the spec.</em></h2>
-    <p class="lead" style="margin-bottom:20px">The number one reason vibe coding projects fall apart is jumping straight into building. A spec takes 10 minutes and saves hours of fixes.</p>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-label">Your PRD answers 3 questions</div>
-        <ul>
-          <li>What is this product?</li>
-          <li>Who is going to use it?</li>
-          <li>What will they actually do on it?</li>
-        </ul>
-        <div style="margin-top:16px; font-size:13px; color:var(--muted)">
-          Then break it into <strong>phases</strong>. Phase 1 is core functionality only. Everything else is Phase 2 or later.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-label">Use this prompt now</div>
-        <div class="code-block">
-          <span class="s">"I want to build [your idea].<br>Ask me questions to help write<br>a product spec with phases<br>and screens."</span>
-        </div>
-        <div style="margin-top:12px; font-size:12px; color:var(--muted)">Let it ask. Answer honestly. The output becomes your build guide.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. MOCKUPS -->
-  <div class="slide" id="s3">
-    <div class="eyebrow">Step 2 — 25 to 35 min</div>
-    <h2 class="h2">See it before <em>you build it.</em></h2>
-    <p class="lead" style="margin-bottom:20px">Pick a design style first. Generate HTML mockups in 2–3 variations. Changing a mockup takes seconds — changing real code takes hours.</p>
-    <div class="flow">
-      <div class="flow-step">
-        <div class="flow-label">01</div>
-        <div class="flow-title">Pick a style</div>
-        <div class="flow-desc">Browse the <a href="https://ui-catalog.mantaray.digital/" target="_blank">design catalog</a> or paste in any visual reference you like</div>
-      </div>
-      <div class="flow-arrow">›</div>
-      <div class="flow-step">
-        <div class="flow-label">02</div>
-        <div class="flow-title">Generate mockups</div>
-        <div class="flow-desc">Paste your style reference into Claude. Ask for 2–3 HTML variations per screen</div>
-      </div>
-      <div class="flow-arrow">›</div>
-      <div class="flow-step">
-        <div class="flow-label">03</div>
-        <div class="flow-title">Iterate visually</div>
-        <div class="flow-desc">Tweak until every screen looks right. Only then move to building.</div>
-      </div>
-      <div class="flow-arrow">›</div>
-      <div class="flow-step">
-        <div class="flow-label">04</div>
-        <div class="flow-title">Build from it</div>
-        <div class="flow-desc">Low variation — the mockup HTML becomes your real UI foundation</div>
-      </div>
-    </div>
-    <div class="note">
-      <strong>Why HTML mockups?</strong> Faster than Figma to iterate. Lower variation when you move to the real build — you can reuse the code directly. And the AI is very good at generating them.
-    </div>
-  </div>
-
-  <!-- 5. BUILD -->
-  <div class="slide" id="s4">
-    <div class="eyebrow">Step 3 — 35 to 50 min</div>
-    <h2 class="h2">Build it <em>properly.</em></h2>
-    <p class="lead" style="margin-bottom:20px">Two rules that eliminate most beginner mistakes before they happen.</p>
-    <div class="build-grid">
-      <div class="card">
-        <div class="card-label">Stack</div>
-        <div class="stack-row">
-          <span class="stag">Next.js</span>
-          <span class="stag">Convex</span>
-          <span class="stag">Convex Auth</span>
-          <span class="stag">Vercel</span>
-          <span class="stag">Claude Code</span>
-        </div>
-        <div style="font-size:13px; color:var(--muted); line-height:1.6">Tell Claude your stack at the start of every session. Every single time — it matters.</div>
-      </div>
-      <div class="card">
-        <div class="card-label">Two rules — no exceptions</div>
-        <div class="rule-row">
-          <div class="rule-mark rule-yes">1</div>
-          <div>Build backend functions <strong style="color:var(--text)">in parallel</strong> with the frontend. Never at the end — you will regret it.</div>
-        </div>
-        <div class="rule-row">
-          <div class="rule-mark rule-no">X</div>
-          <div><strong style="color:var(--text)">No mock data. Ever.</strong> Hard-coded data will haunt every future feature you try to build.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. DEPLOY + ITERATE -->
-  <div class="slide" id="s5">
-    <div class="eyebrow">Step 4 — 50 to 60 min</div>
-    <h2 class="h2">Deploy first. <em>Then fix.</em></h2>
-    <p class="lead" style="margin-bottom:16px">First pass is always around 75%. That is fine. Ship it immediately, get a live URL, then iterate on the real thing — not localhost.</p>
-    <div class="deploy-cmd">
-      <span>$</span> vercel --prod
-      <small>live in ~30 seconds</small>
-    </div>
-    <div class="bug-grid">
-      <div class="bug bug-bad">
-        <div class="bug-lbl">Vague — slow to fix</div>
-        <div class="text">"The timer is broken"</div>
-      </div>
-      <div class="bug bug-good">
-        <div class="bug-lbl">Specific — fast to fix</div>
-        <div class="text">"The timer resets when I click pause. It should stop at the current time and resume from there when I click play again."</div>
-      </div>
-    </div>
-    <div style="margin-top:14px; font-size:13px; color:var(--muted)">The more specific your bug prompt, the faster the fix. Describe the exact behavior — not just that something is wrong.</div>
-  </div>
-
-  <!-- 7. CLOSE -->
-  <div class="slide" id="s6">
-    <div class="eyebrow">That's a Wrap</div>
-    <h2 class="h2">You shipped <em>something real.</em></h2>
-    <p class="lead" style="margin-bottom:24px">The process works every time. Use it on every project from here.</p>
-    <div class="s7-layout">
-      <div>
-        <div class="takeaway">
-          <div class="t-num">1</div>
-          <div class="t-text"><strong>Spec before you build.</strong> Always. A 10-minute spec saves hours of debugging.</div>
-        </div>
-        <div class="takeaway">
-          <div class="t-num">2</div>
-          <div class="t-text"><strong>Mockup before you code.</strong> Change pixels, not logic.</div>
-        </div>
-        <div class="takeaway">
-          <div class="t-num">3</div>
-          <div class="t-text"><strong>Deploy early, iterate on the live link.</strong> Real apps don't live on localhost.</div>
-        </div>
-        <div class="takeaway">
-          <div class="t-num">4</div>
-          <div class="t-text"><strong>Specific prompts get specific fixes.</strong> Describe the exact behavior, not just "it's broken".</div>
-        </div>
-      </div>
-      <div class="help-card">
-        <div class="help-label">Questions after today</div>
-        <div class="help-title">Get unstuck in the Discord</div>
-        <div class="help-desc">Drop a message in the workshop thread and someone will help you get sorted.</div>
-        <a href="https://discord.com/channels/900827411917201418/1479322986568876065" target="_blank" class="help-link">Join the thread</a>
-      </div>
-    </div>
-  </div>
-
 </div>
+
+<!-- 2 · ABOUT -->
+<div class="slide">
+  <div class="eye">Your Host</div>
+  <div class="about">
+    <div>
+      <h2 style="margin-bottom:4px">Ahmed Afify</h2>
+      <p style="font-size:15px;color:var(--accent);font-weight:600;margin-bottom:28px">Founder, <a href="https://mantaray.digital" target="_blank">Mantaray Digital</a></p>
+      <div class="about-rows">
+        <div class="about-row"><div class="about-n">10+</div><div class="about-l">Years building software products</div></div>
+        <div class="about-row"><div class="about-n">10x</div><div class="about-l">Team productivity — same people, AI-empowered</div></div>
+        <div class="about-row"><div class="about-n" style="font-size:16px;width:52px">AI ≠ magic</div><div class="about-l">It amplifies your intelligence — it doesn't replace it</div></div>
+      </div>
+      <a href="https://aafify.com/about" target="_blank" class="btn">aafify.com/about</a>
+    </div>
+    <div>
+      <img src="ahmed.jpg" alt="Ahmed Afify" style="width:300px;height:390px;object-fit:cover;object-position:center top;border-radius:16px;display:block;box-shadow:0 16px 48px rgba(0,0,0,0.14);" />
+    </div>
+  </div>
+</div>
+
+<!-- 3 · AGENDA -->
+<div class="slide">
+  <div class="eye">The Plan</div>
+  <h2>One hour. <em>Real output.</em></h2>
+  <p class="lead">You build alongside me at every step. Ask questions any time — nothing is a dumb question here.</p>
+  <div class="agrid">
+    <div class="ag"><div class="agt">0–5 min</div><div class="agh">Intro</div><div class="agd">What vibecoding actually is and why process beats tools every time</div></div>
+    <div class="ag"><div class="agt">5–15 min</div><div class="agh">Idea to Spec</div><div class="agd">Write a proper PRD with AI. You do yours in parallel.</div></div>
+    <div class="ag"><div class="agt">15–25 min</div><div class="agh">Phases + Screens</div><div class="agd">Break the spec into phases. List every screen before touching code.</div></div>
+    <div class="ag"><div class="agt">25–35 min</div><div class="agh">Design + Mockups</div><div class="agd">Pick a style, generate HTML mockups, iterate visually before building.</div></div>
+    <div class="ag"><div class="agt">35–50 min</div><div class="agh">Build</div><div class="agd">Next.js + Convex. Backend in parallel. No mock data — ever.</div></div>
+    <div class="ag"><div class="agt">50–60 min</div><div class="agh">Deploy + Iterate</div><div class="agd">Ship to Vercel immediately. Test on the live link. Fix from there.</div></div>
+  </div>
+</div>
+
+<!-- 4 · SPEC -->
+<div class="slide">
+  <div class="eye">Step 1 — Idea to Spec · 5–15 min</div>
+  <h2>Start with <em>the spec.</em></h2>
+  <p class="lead">The #1 reason vibe coding projects fall apart: jumping straight into building. A spec takes 10 minutes and saves hours of broken code.</p>
+  <div class="twocol">
+    <div class="card">
+      <div class="clabel">A good spec answers 3 questions</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="font-size:16px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border)">What is this product?</div>
+        <div style="font-size:16px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border)">Who is going to use it?</div>
+        <div style="font-size:16px;font-weight:600;padding:12px 0">What will they actually do on it?</div>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--muted);line-height:1.65">Then break it into <strong style="color:var(--text)">phases</strong>. Phase 1 is core only. Everything else waits.</div>
+    </div>
+    <div class="card">
+      <div class="clabel">Use this prompt right now</div>
+      <div class="code-box">
+        <span class="s">"I want to build [your idea]. Ask me questions to write a product spec with phases and screens."</span>
+      </div>
+      <div style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.65">Let it ask. Answer honestly. The output becomes your build guide — share it with the AI at the start of every coding session.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 · PHASES + SCREENS -->
+<div class="slide">
+  <div class="eye">Step 2 — Phases + Screens · 15–25 min</div>
+  <h2>Plan before <em>you build.</em></h2>
+  <p class="lead">Break your spec into phases. Every screen gets listed before you write a single line of code. This stops scope creep before it starts.</p>
+  <div class="phases">
+    <div class="phase-card">
+      <div class="ptag">Phase 1 — Core</div>
+      <h3>Only what makes it work</h3>
+      <div class="phase-item"><strong>Auth screen</strong> — sign up, log in</div>
+      <div class="phase-item"><strong>Main screen</strong> — the core interaction</div>
+      <div class="phase-item"><strong>Settings</strong> — bare minimum</div>
+      <div style="margin-top:14px;font-size:13px;color:var(--muted)">If it's not critical to the core loop — it goes to Phase 2.</div>
+    </div>
+    <div class="phase-card">
+      <div class="ptag">Phase 2+ — Nice to have</div>
+      <h3>Everything else</h3>
+      <div class="phase-item">Notifications, social features</div>
+      <div class="phase-item">Analytics, dashboards</div>
+      <div class="phase-item">Advanced settings, integrations</div>
+      <div style="margin-top:14px;font-size:13px;color:var(--muted)">Ship Phase 1 first. Validate it works. Then build Phase 2.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 · MOCKUPS -->
+<div class="slide">
+  <div class="eye">Step 3 — Design + Mockups · 25–35 min</div>
+  <h2>See it before <em>you build it.</em></h2>
+  <p class="lead">Pick a design style first. Generate HTML mockups in 2–3 variations. Changing a mockup takes seconds — changing real code takes hours.</p>
+  <div class="flow4">
+    <div class="fs"><div class="fnum">01</div><div class="ftitle">Pick a style</div><div class="fdesc">Browse the <a href="https://ui-catalog.mantaray.digital/" target="_blank">design catalog</a> or paste any visual reference</div></div>
+    <div class="farrow">›</div>
+    <div class="fs"><div class="fnum">02</div><div class="ftitle">Generate mockups</div><div class="fdesc">Paste your style into Claude. Ask for 2–3 HTML variations per screen</div></div>
+    <div class="farrow">›</div>
+    <div class="fs"><div class="fnum">03</div><div class="ftitle">Iterate visually</div><div class="fdesc">Tweak until every screen looks right — before touching real code</div></div>
+    <div class="farrow">›</div>
+    <div class="fs"><div class="fnum">04</div><div class="ftitle">Build from it</div><div class="fdesc">The mockup HTML becomes your real UI foundation — low variation</div></div>
+  </div>
+  <div class="fnote"><strong>Why HTML mockups over Figma?</strong> Faster to iterate, zero extra tooling, and you can reuse the code directly in the real build. The AI generates them well.</div>
+</div>
+
+<!-- 7 · BUILD -->
+<div class="slide">
+  <div class="eye">Step 4 — Build · 35–50 min</div>
+  <h2>Build it <em>properly.</em></h2>
+  <p class="lead">Two rules that eliminate most beginner mistakes before they happen. Break either one and you will pay for it later.</p>
+  <div class="build2">
+    <div class="card">
+      <div class="clabel">Stack</div>
+      <div class="stags">
+        <span class="stag">Next.js</span>
+        <span class="stag">Convex</span>
+        <span class="stag">Convex Auth</span>
+        <span class="stag">Vercel</span>
+        <span class="stag">Claude Code</span>
+      </div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.65">Tell Claude your full stack at the start of every session. Every time — it changes how it writes the code.</div>
+    </div>
+    <div class="card">
+      <div class="clabel">Two rules — no exceptions</div>
+      <div class="rrow">
+        <div class="rm ryes">1</div>
+        <div>Build backend functions <strong style="color:var(--text)">in parallel</strong> with the frontend. Never at the end — you will regret it.</div>
+      </div>
+      <div class="rrow">
+        <div class="rm rno">X</div>
+        <div><strong style="color:var(--text)">No mock data. Ever.</strong> Hard-coded data will break every feature you build after it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 · DEPLOY + ITERATE -->
+<div class="slide">
+  <div class="eye">Step 5 — Deploy + Iterate · 50–60 min</div>
+  <h2>Deploy first. <em>Then fix.</em></h2>
+  <p class="lead">First pass is always ~75% there. That is fine. Ship it, get a live URL, then iterate on the real thing — not localhost.</p>
+  <div class="dcmd"><span>$</span> vercel --prod<small>live in ~30 seconds</small></div>
+  <div class="buggs">
+    <div class="bugg bugg-bad">
+      <div class="blbl">Vague — slow to fix</div>
+      <div class="bt">"The timer is broken"</div>
+    </div>
+    <div class="bugg bugg-good">
+      <div class="blbl">Specific — gets fixed fast</div>
+      <div class="bt">"The timer resets when I click pause. It should stop at the current time and resume from there when I click play again."</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;font-size:14px;color:var(--muted)">Describe the exact behavior — not just that something is wrong. The AI can't read your mind.</div>
+</div>
+
+<!-- 9 · CLOSE -->
+<div class="slide">
+  <div class="eye">That's a Wrap</div>
+  <h2>You shipped <em>something real.</em></h2>
+  <p class="lead">The process works every time. Use it on every project.</p>
+  <div class="close2">
+    <div>
+      <div class="tkwy"><div class="tn">1</div><div class="tt"><strong>Spec before you build.</strong> Always. 10 minutes of spec saves hours of broken code.</div></div>
+      <div class="tkwy"><div class="tn">2</div><div class="tt"><strong>Plan phases and screens.</strong> Phase 1 is core only. Ship it. Then build Phase 2.</div></div>
+      <div class="tkwy"><div class="tn">3</div><div class="tt"><strong>Mockup before you code.</strong> Change pixels, not logic.</div></div>
+      <div class="tkwy"><div class="tn">4</div><div class="tt"><strong>Deploy early, iterate on the live link.</strong> Real apps don't live on localhost.</div></div>
+      <div class="tkwy"><div class="tn">5</div><div class="tt"><strong>Specific prompts get specific fixes.</strong> Describe exact behavior.</div></div>
+    </div>
+    <div class="hcard">
+      <div class="hlbl">Questions after today</div>
+      <div class="htitle">Get unstuck in the Discord</div>
+      <div class="hdesc">Drop a message in the workshop thread — someone will help you get sorted.</div>
+      <a href="https://discord.com/channels/900827411917201418/1479322986568876065" target="_blank" class="btn">Join the thread →</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
 
 <div class="nav">
   <button class="nbtn" id="prev">← Prev</button>
@@ -800,34 +391,30 @@
   <div class="dot" data-i="5"></div>
   <div class="dot" data-i="6"></div>
   <div class="dot" data-i="7"></div>
+  <div class="dot" data-i="8"></div>
   <div class="sep"></div>
   <button class="nbtn" id="next">Next →</button>
 </div>
 
 <script>
-  let cur = 0;
-  const N = 8;
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
-  const ctr = document.getElementById('ctr');
-
-  function go(n) {
-    slides[cur].classList.remove('active');
-    slides[cur].classList.add('exit');
-    setTimeout(() => slides[cur].classList.remove('exit'), 420);
+  let cur=0; const N=9;
+  const slides=document.querySelectorAll('.slide');
+  const dots=document.querySelectorAll('.dot');
+  const ctr=document.getElementById('ctr');
+  function go(n){
+    slides[cur].classList.remove('active'); slides[cur].classList.add('exit');
+    setTimeout(()=>slides[cur].classList.remove('exit'),380);
     dots[cur].classList.remove('active');
-    cur = ((n % N) + N) % N;
-    slides[cur].classList.add('active');
-    dots[cur].classList.add('active');
-    ctr.textContent = `${cur + 1} / ${N}`;
+    cur=((n%N)+N)%N;
+    slides[cur].classList.add('active'); dots[cur].classList.add('active');
+    ctr.textContent=`${cur+1} / ${N}`;
   }
-
-  document.getElementById('next').onclick = () => go(cur + 1);
-  document.getElementById('prev').onclick = () => go(cur - 1);
-  dots.forEach(d => d.addEventListener('click', () => go(+d.dataset.i)));
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
-    if (e.key === 'ArrowLeft') go(cur - 1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  dots.forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ')go(cur+1);
+    if(e.key==='ArrowLeft')go(cur-1);
   });
 </script>
 </body>
