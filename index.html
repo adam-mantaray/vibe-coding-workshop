@@ -514,7 +514,7 @@
 <body>
 
 <div class="brand">Vibecoding <em>101</em></div>
-<div class="counter" id="ctr">1 / 7</div>
+<div class="counter" id="ctr">1 / 8</div>
 
 <div class="deck">
 
@@ -570,7 +570,37 @@
     </div>
   </div>
 
-  <!-- 2. AGENDA -->
+  <!-- 2. ABOUT -->
+  <div class="slide" id="s-about">
+    <div class="eyebrow">Your Host</div>
+    <div class="s1-layout">
+      <div>
+        <h2 class="h2">Ahmed Afify</h2>
+        <p style="font-size:15px; color:var(--muted); line-height:1.7; max-width:480px; margin: 12px 0 28px">
+          Founder of <a href="https://mantaray.digital" target="_blank">Mantaray Digital</a> — a software company building products across fintech, wellness, and enterprise tools.<br><br>
+          I've been building software for over 10 years. When AI coding tools arrived, I didn't replace my team — I empowered them with it. Every engineer at Mantaray now uses AI as a core part of their workflow. The result: the same team ships 10x faster without cutting corners on quality.<br><br>
+          That's what this session is about — not replacing how you work, but amplifying it.
+        </p>
+        <a href="https://aafify.com/about" target="_blank" class="help-link" style="font-size:13px">aafify.com/about</a>
+      </div>
+      <div class="s1-steps">
+        <div class="s1-step">
+          <div class="s1-step-num">10<span style="font-size:8px">+</span></div>
+          <div class="s1-step-label">Years building software</div>
+        </div>
+        <div class="s1-step">
+          <div class="s1-step-num">10x</div>
+          <div class="s1-step-label">Team productivity with AI</div>
+        </div>
+        <div class="s1-step">
+          <div class="s1-step-num">AI</div>
+          <div class="s1-step-label">Amplifies your intelligence — doesn't replace it</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. AGENDA -->
   <div class="slide" id="s1">
     <div class="eyebrow">The Plan</div>
     <h2 class="h2">One hour. <em>Real output.</em></h2>
@@ -769,13 +799,14 @@
   <div class="dot" data-i="4"></div>
   <div class="dot" data-i="5"></div>
   <div class="dot" data-i="6"></div>
+  <div class="dot" data-i="7"></div>
   <div class="sep"></div>
   <button class="nbtn" id="next">Next →</button>
 </div>
 
 <script>
   let cur = 0;
-  const N = 7;
+  const N = 8;
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
   const ctr = document.getElementById('ctr');
