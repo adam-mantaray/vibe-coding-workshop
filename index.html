@@ -1,1167 +1,741 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vibe Coding with Knowledge</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibecoding 101</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    /* Ledgerly "Money Tree" Design System — Light Mode */
-    --bg: #FAF5EB;
-    --bg-secondary: #F0E9DA;
-    --bg-tertiary: #E5DFD2;
-    --surface: #FFFFFF;
-    --surface-hover: #FBF8F2;
-    --border: #E5DFD2;
-    --border-strong: #D4CEC0;
-    --text: #2D2A23;
-    --text-secondary: #6B6558;
-    --muted: #6B6558;
-    --text-tertiary: #A09A8C;
-    --accent: #2D5F3F;
-    --accent2: #8B6E4E;
-    --green: #3A7D53;
-    --red: #C45C3E;
-    --orange: #C45C3E;
-    --yellow: #C49A3F;
-    --purple: #5C4A35;
-    --pink: #C45C3E;
-  }
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --border: #E8E2D9;
+      --text: #1A1A1A;
+      --muted: #7A7060;
+      --accent: #C96442;
+      --accent-light: rgba(201,100,66,0.08);
+      --accent-border: rgba(201,100,66,0.2);
+    }
 
-  body {
-    font-family: 'DM Sans', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
 
-  .deck { height: 100vh; width: 100vw; position: relative; }
+    /* ── Layout ── */
+    .deck { width: 100%; height: 100vh; position: relative; }
 
-  .slide {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 80px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-    text-align: center;
-  }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 72px 100px;
+      opacity: 0;
+      transform: translateX(48px);
+      transition: all 0.45s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-  .slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
-  .slide.prev { opacity: 0; transform: translateY(-20px); }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-48px); }
 
-  .slide::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(45,95,63,0.03) 0%, transparent 70%);
-    pointer-events: none;
-  }
+    /* ── Nav ── */
+    .nav {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+    }
 
-  h1 { font-family: 'Fraunces', Georgia, serif; font-size: 4.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px; }
-  h2 { font-family: 'Fraunces', Georgia, serif; font-size: 3.2rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px; }
-  h3 { font-size: 1.6rem; font-weight: 500; margin-bottom: 16px; color: var(--muted); }
-  p, li { font-size: 1.5rem; line-height: 1.6; color: var(--muted); }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-  .big-text { font-size: 2.2rem; line-height: 1.5; max-width: 850px; }
-  .huge-text { font-size: 3rem; font-weight: 700; line-height: 1.4; max-width: 900px; }
+    .dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
 
-  .accent { color: var(--accent); }
-  .accent2 { color: var(--accent2); }
-  .green { color: var(--green); }
-  .red { color: var(--red); }
-  .orange { color: var(--orange); }
-  .yellow { color: var(--yellow); }
-  .pink { color: var(--pink); }
-  .white { color: var(--text); font-weight: 600; }
-  .muted { color: var(--muted); }
+    .nbtn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
 
-  .gradient-text {
-    background: linear-gradient(135deg, #2D5F3F, #3A7D53, #8B6E4E);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+    .nbtn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Prompt box */
-  .prompt-box {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 36px 44px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.3rem;
-    text-align: left;
-    max-width: 900px;
-    width: 100%;
-    margin: 24px 0;
-    line-height: 1.7;
-    position: relative;
-  }
+    .counter {
+      position: fixed;
+      top: 28px; right: 36px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
-  .prompt-label {
-    position: absolute;
-    top: -12px; left: 20px;
-    background: var(--bg-tertiary);
-    padding: 0 12px;
-    font-size: 0.85rem;
-    color: var(--text-tertiary);
-    font-family: 'JetBrains Mono', monospace;
-  }
+    .brand {
+      position: fixed;
+      top: 28px; left: 36px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-  .cursor {
-    display: inline-block;
-    width: 2px; height: 1.3em;
-    background: var(--accent);
-    animation: blink 1s infinite;
-    vertical-align: text-bottom;
-    margin-left: 4px;
-  }
+    .brand span { color: var(--accent); }
 
-  @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    /* ── Shared components ── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      background: var(--accent-light);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
 
-  /* Cards - horizontal */
-  .layers {
-    display: flex;
-    gap: 20px;
-    margin-top: 32px;
-    width: 100%;
-    max-width: 1100px;
-  }
+    .h1 {
+      font-size: clamp(44px, 5.5vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
 
-  .layer-card {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    text-align: left;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+    .h1 span { color: var(--accent); }
 
-  .layer-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-  .layer-card .emoji { font-size: 2.5rem; margin-bottom: 12px; }
-  .layer-card h4 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
-  .layer-card p { font-size: 1rem; color: var(--muted); }
-  .layer-card .sub { font-size: 0.85rem; color: #555; margin-top: 8px; }
+    .h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
 
-  .layer-card .rec {
-    margin-top: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--green);
-    background: rgba(34, 197, 94, 0.1);
-    padding: 6px 12px;
-    border-radius: 6px;
-    display: inline-block;
-  }
+    .h2 span { color: var(--accent); }
 
-  /* Two column */
-  .stack-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    max-width: 1000px;
-    width: 100%;
-    margin-top: 24px;
-  }
+    .sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
 
-  .stack-col {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    text-align: left;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+    .code {
+      display: inline-flex;
+      align-items: center;
+      background: #1A1A1A;
+      color: #E8A87C;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
 
-  .stack-col.good { border-color: var(--green); }
-  .stack-col.bad { border-color: var(--red); }
-  .stack-col h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; }
-  .stack-col ul { list-style: none; padding: 0; }
-  .stack-col li { font-size: 1.1rem; padding: 6px 0; display: flex; align-items: center; gap: 10px; }
-  .stack-col.good li::before { content: '✅'; }
-  .stack-col.bad li::before { content: '❌'; }
+    /* Grid bg */
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+    }
 
-  /* V stack */
-  .v-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 800px;
-    width: 100%;
-    margin-top: 24px;
-  }
+    /* ── SLIDE 1 — TITLE ── */
+    .s1-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 8px;
+    }
 
-  .v-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px 28px;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+    .stat-n {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
 
-  .v-card .emoji { font-size: 2rem; min-width: 40px; text-align: center; }
-  .v-card h4 { font-size: 1.2rem; font-weight: 700; }
-  .v-card p { font-size: 1rem; color: var(--muted); }
+    .stat-n span { color: var(--accent); }
+    .stat-l { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
 
-  /* Tags */
-  .tag {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 4px;
-  }
-  .tag.purple { background: rgba(92,74,53,0.1); color: var(--purple); }
-  .tag.cyan { background: rgba(139,110,78,0.1); color: var(--accent2); }
-  .tag.green-tag { background: rgba(45,95,63,0.1); color: var(--accent); }
-  .tag.orange-tag { background: rgba(196,92,62,0.1); color: var(--orange); }
-  .tag.pink-tag { background: rgba(196,92,62,0.1); color: var(--pink); }
-  .tag.red-tag { background: rgba(196,92,62,0.1); color: var(--red); }
+    .s1-right {
+      position: absolute;
+      right: 100px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 240px;
+    }
 
-  .divider { width: 60px; height: 4px; background: var(--accent); border-radius: 2px; margin: 20px auto; }
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  /* Quote */
-  .quote {
-    font-size: 2rem;
-    font-style: italic;
-    color: var(--text);
-    max-width: 750px;
-    margin: 16px 0;
-    padding-left: 24px;
-    border-left: 4px solid var(--accent);
-    text-align: left;
-  }
+    .pill-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
 
-  .quote .attr {
-    display: block;
-    font-size: 1rem;
-    font-style: normal;
-    color: var(--muted);
-    margin-top: 12px;
-  }
+    /* ── SLIDE 2 — AGENDA ── */
+    .agenda {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
 
-  /* Callout */
-  .callout {
-    font-size: 3.5rem;
-    font-weight: 900;
-    line-height: 1.3;
-    max-width: 900px;
-  }
+    .ag-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
 
-  .callout .hand {
-    display: inline-block;
-    font-size: 4rem;
-    animation: wave 1.5s ease-in-out infinite;
-    transform-origin: 70% 70%;
-  }
+    .ag-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
 
-  @keyframes wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(20deg); } 75% { transform: rotate(-15deg); } }
+    .ag-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .ag-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-  /* Timeline */
-  .timeline { max-width: 700px; width: 100%; text-align: left; margin-top: 16px; }
-  .timeline .step { display: flex; gap: 20px; padding: 14px 0; align-items: flex-start; }
-  .timeline .time { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--accent); min-width: 60px; padding-top: 4px; }
-  .timeline .content h4 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-  .timeline .content p { font-size: 1.05rem; color: var(--muted); }
+    /* ── SLIDE 3 — SPEC ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 8px;
+    }
 
-  /* Evolution arrow chain */
-  .evo-chain {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin-top: 32px;
-    max-width: 1000px;
-  }
+    .col-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
 
-  .evo-node {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px 28px;
-    text-align: center;
-    flex: 1;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+    .col-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
 
-  .evo-node:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-  .evo-node .year { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 6px; }
-  .evo-node .emoji { font-size: 2.5rem; margin-bottom: 8px; }
-  .evo-node h4 { font-size: 1.1rem; font-weight: 700; }
-  .evo-node p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+    .col-card p, .col-card li {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
 
-  .evo-arrow {
-    font-size: 1.5rem;
-    color: var(--accent);
-    padding: 0 8px;
-    flex-shrink: 0;
-  }
+    .col-card ul { padding-left: 16px; }
+    .col-card li { margin-bottom: 4px; }
 
-  /* Tool grid - 3 col */
-  .tool-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    max-width: 1100px;
-    width: 100%;
-    margin-top: 24px;
-  }
+    .prompt-box {
+      background: #1A1A1A;
+      border-radius: 12px;
+      padding: 18px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #ccc;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
 
-  .tool-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    text-align: left;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+    .prompt-box .c { color: #5A5040; }
+    .prompt-box .s { color: #A8D8A8; }
+    .prompt-box .k { color: #E8A87C; }
 
-  .tool-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-  .tool-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-  .tool-card p { font-size: 0.9rem; color: var(--muted); }
-  .tool-card .tool-tag {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
+    /* ── SLIDE 4 — MOCKUPS ── */
+    .mockup-flow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
 
-  /* Confession */
-  .confession-list { text-align: left; max-width: 700px; }
-  .confession-list li { font-size: 1.4rem; padding: 10px 0; list-style: none; color: var(--text); }
-  .confession-list li::before { content: '😅 '; }
+    .mf-step {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
 
-  /* Workshop steps */
-  .workshop-steps { display: flex; gap: 20px; max-width: 1100px; width: 100%; margin-top: 24px; }
-  .workshop-step { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
-  .workshop-step .step-num { font-size: 3rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; }
-  .workshop-step h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-  .workshop-step p { font-size: 1rem; color: var(--muted); }
+    .mf-icon { font-size: 28px; margin-bottom: 8px; }
+    .mf-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .mf-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-  /* Fixed */
-  .slide-counter { position: fixed; bottom: 20px; right: 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-tertiary); z-index: 100; }
-  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2D5F3F, #3A7D53); transition: width 0.5s ease; z-index: 100; }
-  .watermark { position: fixed; bottom: 20px; left: 30px; font-size: 0.85rem; color: var(--text-tertiary); z-index: 100; font-weight: 600; }
+    .mf-arrow { font-size: 20px; color: var(--accent); flex-shrink: 0; }
 
-  /* Comparison table-ish */
-  .compare-row {
-    display: flex;
-    gap: 12px;
-    max-width: 1000px;
-    width: 100%;
-    margin-top: 8px;
-    align-items: stretch;
-  }
+    .mockup-tip {
+      background: var(--surface);
+      border: 1px solid var(--accent-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 16px;
+    }
 
-  .compare-cell {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 20px;
-    text-align: center;
-  }
+    /* ── SLIDE 5 — BUILD ── */
+    .build-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
 
-  .compare-cell h5 {
-    font-size: 0.85rem;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-  }
+    .build-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
 
-  .compare-cell .val {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-</style>
+    .build-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .stack-items { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .stack-tag {
+      background: var(--accent-light);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rule {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .rule-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* ── SLIDE 6 — BUGS ── */
+    .bug-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .bug-card {
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .bug-bad { background: rgba(220,38,38,0.05); border: 1px solid rgba(220,38,38,0.2); }
+    .bug-good { background: rgba(45,106,79,0.05); border: 1px solid rgba(45,106,79,0.2); }
+
+    .bug-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .bug-bad .bug-label { color: #DC2626; }
+    .bug-good .bug-label { color: #2D6A4F; }
+
+    .bug-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .deploy-box {
+      background: #1A1A1A;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #A8D8A8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ── SLIDE 7 — CLOSE ── */
+    .close-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+      max-width: 520px;
+    }
+
+    .close-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .close-num {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .close-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .close-text strong { color: var(--text); }
+
+    .discord-box {
+      position: absolute;
+      right: 100px;
+      bottom: 100px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      width: 260px;
+    }
+
+    .discord-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .discord-link {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      word-break: break-all;
+    }
+  </style>
 </head>
 <body>
 
-<div class="progress-bar" id="progress"></div>
-<div class="slide-counter" id="counter"></div>
-<div class="watermark">Ahmed Afify</div>
+<div class="brand">Vibecoding <span>101</span></div>
+<div class="counter" id="counter">1 / 7</div>
 
-<div class="deck" id="deck">
+<div class="deck">
 
-  <!-- 1: TITLE -->
-  <div class="slide active">
-    <h3 class="muted" style="font-size: 1.2rem; letter-spacing: 0.1em; text-transform: uppercase;">Ahmed Afify</h3>
-    <h1 style="margin-top: 8px;"><span class="gradient-text">Vibe Coding</span><br>with Knowledge</h1>
-    <p class="big-text" style="margin-top: 12px;">
-      How apps actually work, the AI tools that build them,<br>
-      and why your brain still matters
-    </p>
-    <div style="margin-top: 40px;">
-      <span class="tag purple">MSc Computer Science</span>
-      <span class="tag cyan">10 years shipping</span>
-      <span class="tag green-tag">Still Googling CSS</span>
+  <!-- ── SLIDE 1: TITLE ── -->
+  <div class="slide active" id="s0">
+    <div class="tag">Interactive Workshop</div>
+    <h1 class="h1">Build real things.<br><span>Ship them today.</span></h1>
+    <p class="sub">A hands-on introduction to vibecoding — from idea to live app in 1 hour. No experience needed. Just bring your laptop and something you want to build.</p>
+    <div class="s1-stats">
+      <div>
+        <div class="stat-n">1<span>hr</span></div>
+        <div class="stat-l">Start to deployed</div>
+      </div>
+      <div>
+        <div class="stat-n">0<span>x</span></div>
+        <div class="stat-l">Prior coding needed</div>
+      </div>
+      <div>
+        <div class="stat-n">100<span>%</span></div>
+        <div class="stat-l">Hands-on</div>
+      </div>
+    </div>
+    <div class="s1-right">
+      <div class="pill"><div class="pill-icon">💡</div> Idea</div>
+      <div class="pill"><div class="pill-icon">📋</div> Spec</div>
+      <div class="pill"><div class="pill-icon">🎨</div> Mockup</div>
+      <div class="pill"><div class="pill-icon">⚡</div> Build</div>
+      <div class="pill"><div class="pill-icon">🚀</div> Deploy</div>
     </div>
   </div>
 
-  <!-- 2: ABOUT ME -->
-  <div class="slide">
-    <h2>About Me</h2>
-    <div class="v-stack" style="max-width: 600px; margin-top: 8px;">
-      <div class="v-card" style="border-color: var(--accent);">
-        <div class="emoji">🎓</div>
-        <div>
-          <h4>MSc Computer Science</h4>
-        </div>
+  <!-- ── SLIDE 2: AGENDA ── -->
+  <div class="slide" id="s1">
+    <div class="tag">Today's Plan</div>
+    <h2 class="h2">1 hour. <span>Real output.</span></h2>
+    <p class="sub" style="margin-bottom:24px">You build alongside me at every step. Ask questions any time — nothing is dumb here.</p>
+    <div class="agenda">
+      <div class="ag-item">
+        <div class="ag-time">0–5m</div>
+        <div><div class="ag-title">Intro</div><div class="ag-desc">What vibecoding actually is and why process matters more than the tool</div></div>
       </div>
-      <div class="v-card">
-        <div class="emoji">🏗️</div>
-        <div>
-          <h4>10 years building software</h4>
-        </div>
+      <div class="ag-item">
+        <div class="ag-time">5–15m</div>
+        <div><div class="ag-title">Idea → Spec</div><div class="ag-desc">Write a proper PRD with AI. You do it for your project in parallel.</div></div>
       </div>
-      <div class="v-card">
-        <div class="emoji">🏢</div>
-        <div>
-          <h4>Founder, Mantaray Digital</h4>
-          <p>Digital agency + product studio</p>
-        </div>
+      <div class="ag-item">
+        <div class="ag-time">15–25m</div>
+        <div><div class="ag-title">Phases + Screens</div><div class="ag-desc">Break your spec into phases. List every screen before writing code.</div></div>
       </div>
-      <div class="v-card">
-        <div class="emoji">🇪🇬</div>
-        <div>
-          <h4>Egyptian</h4>
-        </div>
+      <div class="ag-item">
+        <div class="ag-time">25–35m</div>
+        <div><div class="ag-title">Mockups</div><div class="ag-desc">Pick a style, generate HTML mockups, iterate visually before building.</div></div>
       </div>
-    </div>
-  </div>
-
-  <!-- 3: AUDIENCE CHECK -->
-  <div class="slide">
-    <p class="callout">
-      Hands up if you've used<br>
-      an AI tool to write code
-      <span class="hand">✋</span>
-    </p>
-  </div>
-
-  <!-- 3: SECOND CHECK -->
-  <div class="slide">
-    <p class="callout">
-      Now hands up if you<br>
-      <span class="white">actually understood</span><br>
-      what it gave you
-    </p>
-    <p style="margin-top: 32px; font-size: 1.5rem;">
-      <span class="muted">No judgment. That's literally why we're here.</span>
-    </p>
-  </div>
-
-  <!-- 4: THE DREAM PROMPT -->
-  <div class="slide">
-    <h3 class="muted">Every Twitter founder right now:</h3>
-    <div class="prompt-box" style="margin-top: 16px;">
-      <div class="prompt-label">prompt.txt</div>
-      Build me a SaaS that makes $1M ARR.<br>
-      Use the best tech stack.<br>
-      Make zero mistakes.<br>
-      Deploy it to production.<br>
-      I'll be at the beach. 🏖️<span class="cursor"></span>
-    </div>
-    <div style="margin-top: 24px;">
-      <p style="font-size: 2rem;">
-        <span class="green">Vibes:</span> <span class="white">immaculate</span><br>
-        <span class="red">Revenue:</span> <span class="white">$0</span>
-      </p>
-    </div>
-  </div>
-
-  <!-- 5: WHAT ACTUALLY HAPPENS -->
-  <div class="slide">
-    <h2>What Actually Happens</h2>
-    <div class="timeline">
-      <div class="step">
-        <div class="time" style="color: var(--green);">0:00</div>
-        <div class="content">
-          <h4><span class="green">"I'm a genius"</span></h4>
-          <p>Beautiful landing page. Tailwind gradients. You screenshot it for the group chat.</p>
-        </div>
+      <div class="ag-item">
+        <div class="ag-time">35–50m</div>
+        <div><div class="ag-title">Build</div><div class="ag-desc">Next.js + Convex. Build backend in parallel. No mock data — ever.</div></div>
       </div>
-      <div class="step">
-        <div class="time" style="color: var(--yellow);">2:00</div>
-        <div class="content">
-          <h4><span class="yellow">"Where does the data go?"</span></h4>
-          <p>47 components. Zero backend. The login button is decorative.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="time" style="color: var(--orange);">5:00</div>
-        <div class="content">
-          <h4><span class="orange">"Fix this bug" × 14</span></h4>
-          <p>Each fix creates 2 new bugs. You're in a prompt death spiral.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="time" style="color: var(--red);">8:00</div>
-        <div class="content">
-          <h4><span class="red">"New chat. Start over."</span></h4>
-          <p>Delete everything. Burn the tokens. Repeat tomorrow.</p>
-        </div>
+      <div class="ag-item">
+        <div class="ag-time">50–60m</div>
+        <div><div class="ag-title">Deploy + Iterate</div><div class="ag-desc">Ship to Vercel first. Then test on the live link and fix from there.</div></div>
       </div>
     </div>
   </div>
 
-  <!-- 6: WHY THIS HAPPENS -->
-  <div class="slide">
-    <p class="huge-text">
-      This happens because<br>
-      you asked the AI to<br>
-      <span class="red">make decisions</span><br>
-      it's not qualified to make.
-    </p>
-  </div>
-
-  <!-- 7: TWO THINGS -->
-  <div class="slide">
-    <h2>Today We'll Cover Two Things</h2>
-    <div class="divider"></div>
-    <div class="stack-grid" style="margin-top: 24px;">
-      <div class="stack-col" style="border-color: var(--accent);">
-        <h4 style="color: var(--accent); font-size: 1.5rem;">🧠 The Knowledge</h4>
-        <p style="font-size: 1.2rem; color: var(--muted); margin-top: 12px;">
-          How apps actually work.<br>
-          The layers. The architecture.<br>
-          The stuff you need to know<br>
-          <em>before</em> you open any AI tool.
-        </p>
-      </div>
-      <div class="stack-col" style="border-color: var(--accent2);">
-        <h4 style="color: var(--accent2); font-size: 1.5rem;">🛠️ The Tools</h4>
-        <p style="font-size: 1.2rem; color: var(--muted); margin-top: 12px;">
-          Models, agents, IDEs, CLIs.<br>
-          What exists, what's good,<br>
-          how to pick the right tool<br>
-          for the right job.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== PART 1: THE KNOWLEDGE ==================== -->
-
-  <!-- 8: PART 1 HEADER -->
-  <div class="slide">
-    <h3 class="muted" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 1rem;">Part 1</h3>
-    <h1 style="margin-top: 8px;">How Apps<br>Actually Work</h1>
-    <p class="big-text" style="margin-top: 12px;">
-      <span class="muted">The stuff nobody explains because<br>"you should just know it"</span>
-    </p>
-  </div>
-
-  <!-- 9: THE LAYERS -->
-  <div class="slide">
-    <h2>Every App Has 4 Layers</h2>
-    <h3>You don't need to master them. You need to know they exist.</h3>
-    <div class="layers">
-      <div class="layer-card">
-        <div class="emoji">🖥️</div>
-        <h4>Frontend</h4>
-        <p>What people see. Buttons, pages, forms, animations.</p>
-        <div class="rec">React / Next.js</div>
-      </div>
-      <div class="layer-card">
-        <div class="emoji">⚙️</div>
-        <h4>Backend</h4>
-        <p>The brain. Logic, rules, "who can do what."</p>
-        <div class="rec">Convex / Supabase</div>
-      </div>
-      <div class="layer-card">
-        <div class="emoji">🗄️</div>
-        <h4>Database</h4>
-        <p>Where stuff is saved. Users, orders, messages.</p>
-        <div class="rec">Postgres / Convex</div>
-      </div>
-      <div class="layer-card">
-        <div class="emoji">🚀</div>
-        <h4>Infra</h4>
-        <p>How it reaches the internet. Hosting, domains, SSL.</p>
-        <div class="rec">Vercel / Railway</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 10: THE REAL PROBLEM -->
-  <div class="slide">
-    <p class="huge-text">
-      Most vibe coders only<br>
-      think about <span class="accent">layer one</span>.<br><br>
-      <span class="muted" style="font-size: 1.8rem;">That's why it looks amazing<br>and does absolutely nothing.</span>
-    </p>
-  </div>
-
-  <!-- 11: DATA MODEL -->
-  <div class="slide">
-    <h2>Start With the Data</h2>
-    <h3>Before you write ANY prompt, answer this:</h3>
-    <div class="prompt-box" style="font-size: 1.2rem;">
-      <div class="prompt-label">think before you prompt</div>
-      <span class="accent">What are the "things" in my app?</span><br>
-      → Users, Products, Orders, Reviews<br><br>
-      <span class="accent2">How do they relate?</span><br>
-      → Users place Orders. Orders contain Products. Users write Reviews.<br><br>
-      <span class="green">What can people DO?</span><br>
-      → Sign up, browse, add to cart, checkout, leave review<br><br>
-      <span class="orange">Who can see what?</span><br>
-      → Users see their orders. Admins see all orders. Nobody sees passwords.
-    </div>
-    <p style="margin-top: 16px; font-size: 1.2rem; color: var(--muted);">
-      If you can answer these, the AI can build the rest.
-    </p>
-  </div>
-
-  <!-- 12: VIBE VS KNOWLEDGE PROMPT -->
-  <div class="slide">
-    <h2>Same App, Different Prompt</h2>
-    <div class="stack-grid">
-      <div class="stack-col bad">
-        <h4>❌ Vibes Only</h4>
+  <!-- ── SLIDE 3: SPEC ── -->
+  <div class="slide" id="s2">
+    <div class="tag">Step 1 — 5 to 15 min</div>
+    <h2 class="h2">Start with <span>the spec.</span></h2>
+    <p class="sub" style="margin-bottom: 20px">The #1 reason vibe coding projects fall apart: jumping straight into building. A spec takes 10 minutes and saves hours of fixes.</p>
+    <div class="two-col">
+      <div class="col-card">
+        <h4>Your PRD answers 3 questions</h4>
         <ul>
-          <li>"Build me an e-commerce store"</li>
-          <li>"Add authentication"</li>
-          <li>"Make it scalable"</li>
-          <li>"Handle payments"</li>
-          <li>"Deploy to production"</li>
+          <li>What is this product?</li>
+          <li>Who is going to use it?</li>
+          <li>What will they do on it?</li>
         </ul>
+        <div style="margin-top:14px; font-size:13px; color:var(--muted)">Then break it into <strong style="color:var(--text)">phases</strong> — Phase 1 is core only. Everything else is Phase 2+.</div>
       </div>
-      <div class="stack-col good">
-        <h4>✅ Vibes + Knowledge</h4>
-        <ul>
-          <li>Next.js 15 + Convex. Products, orders, users tables.</li>
-          <li>Clerk for auth — Google + email, role-based access</li>
-          <li>Start with product listing + cart. That's it for v1.</li>
-          <li>Stripe Checkout → webhook → mark order paid in DB</li>
-          <li>Vercel. Push to main = live. Preview on PR.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== PART 2: THE TOOLS ==================== -->
-
-  <!-- 13: PART 2 HEADER -->
-  <div class="slide">
-    <h3 class="muted" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 1rem;">Part 2</h3>
-    <h1 style="margin-top: 8px;">The AI<br>Landscape</h1>
-    <p class="big-text" style="margin-top: 12px;">
-      <span class="muted">Models → Tools → Agents<br>and how they all fit together</span>
-    </p>
-  </div>
-
-  <!-- 14: THE EVOLUTION -->
-  <div class="slide">
-    <h2>How We Got Here</h2>
-    <div class="evo-chain">
-      <div class="evo-node" style="border-color: var(--border-strong);">
-        <div class="year">2021</div>
-        <div class="emoji">📝</div>
-        <h4>Autocomplete</h4>
-        <p>Copilot. Finish your line.</p>
-      </div>
-      <div class="evo-arrow">→</div>
-      <div class="evo-node" style="border-color: var(--accent);">
-        <div class="year">2023</div>
-        <div class="emoji">💬</div>
-        <h4>Chat Coding</h4>
-        <p>ChatGPT. "Build me a..."</p>
-      </div>
-      <div class="evo-arrow">→</div>
-      <div class="evo-node" style="border-color: var(--accent2);">
-        <div class="year">2024</div>
-        <div class="emoji">🖥️</div>
-        <h4>AI-Native IDEs</h4>
-        <p>Cursor, Windsurf. Code with AI.</p>
-      </div>
-      <div class="evo-arrow">→</div>
-      <div class="evo-node" style="border-color: var(--green);">
-        <div class="year">2025</div>
-        <div class="emoji">🤖</div>
-        <h4>Agents</h4>
-        <p>Claude Code, Codex. AI does the work.</p>
-      </div>
-    </div>
-    <p style="margin-top: 24px; font-size: 1.2rem; color: var(--muted);">
-      We went from <span class="white">"help me type"</span> to <span class="white">"build the whole thing"</span> in 4 years.
-    </p>
-  </div>
-
-  <!-- 15: THE MODELS -->
-  <div class="slide">
-    <h2>The Models</h2>
-    <h3>The brains behind everything. Pick the right one.</h3>
-    <div class="layers" style="max-width: 1000px;">
-      <div class="layer-card" style="border-color: var(--accent);">
-        <div class="emoji">🟣</div>
-        <h4>Claude</h4>
-        <p>Best at code right now. Sonnet for speed, Opus for complex tasks.</p>
-        <div class="sub">Anthropic · 200K context</div>
-      </div>
-      <div class="layer-card" style="border-color: var(--green);">
-        <div class="emoji">🟢</div>
-        <h4>GPT-4o / o3</h4>
-        <p>Great all-rounder. o3 for reasoning-heavy tasks.</p>
-        <div class="sub">OpenAI · 128K context</div>
-      </div>
-      <div class="layer-card" style="border-color: var(--accent2);">
-        <div class="emoji">🔵</div>
-        <h4>Gemini</h4>
-        <p>Huge context window. Good for large codebases.</p>
-        <div class="sub">Google · 1M+ context</div>
-      </div>
-    </div>
-    <p style="margin-top: 20px; font-size: 1.2rem; color: var(--muted);">
-      The model matters less than <span class="white">how you use it</span>. They're all good enough.
-    </p>
-  </div>
-
-  <!-- 16: TOOL CATEGORIES -->
-  <div class="slide">
-    <h2>The Tools</h2>
-    <h3>4 categories. Each works differently.</h3>
-    <div class="layers">
-      <div class="layer-card" style="border-color: var(--pink);">
-        <div class="emoji">💬</div>
-        <h4>Chat / GUI</h4>
-        <p>Paste code in, get code back. Lowest barrier.</p>
-        <div class="rec">ChatGPT, Claude.ai</div>
-      </div>
-      <div class="layer-card" style="border-color: var(--orange);">
-        <div class="emoji">🎨</div>
-        <h4>Generators</h4>
-        <p>Describe it, get a full app. Visual-first.</p>
-        <div class="rec">v0, Bolt, Lovable</div>
-      </div>
-      <div class="layer-card" style="border-color: var(--accent);">
-        <div class="emoji">⌨️</div>
-        <h4>AI IDEs</h4>
-        <p>Code editor with AI built in. You're still driving.</p>
-        <div class="rec">Cursor, Windsurf</div>
-      </div>
-      <div class="layer-card" style="border-color: var(--green);">
-        <div class="emoji">🤖</div>
-        <h4>CLI Agents</h4>
-        <p>AI works in your terminal. Reads files, runs commands.</p>
-        <div class="rec">Claude Code, Codex</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 17: CHAT & GENERATORS -->
-  <div class="slide">
-    <h2>💬 Chat & Generators</h2>
-    <h3>Great for starting. Limited for finishing.</h3>
-    <div class="tool-grid">
-      <div class="tool-card">
-        <h4>ChatGPT</h4>
-        <p>The OG. Good for explaining, brainstorming, quick snippets.</p>
-        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">Free tier</div>
-      </div>
-      <div class="tool-card">
-        <h4>Claude.ai</h4>
-        <p>Better at code than GPT. Artifacts feature = instant preview.</p>
-        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Best for code</div>
-      </div>
-      <div class="tool-card">
-        <h4>v0 by Vercel</h4>
-        <p>Describe a UI → get React components. Stunning for frontends.</p>
-        <div class="tool-tag" style="background: rgba(236,72,153,0.15); color: var(--pink);">UI focused</div>
-      </div>
-      <div class="tool-card">
-        <h4>Bolt.new</h4>
-        <p>Full-stack in the browser. Deploys instantly. Magic for prototypes.</p>
-        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Full stack</div>
-      </div>
-      <div class="tool-card">
-        <h4>Lovable</h4>
-        <p>Similar to Bolt. "Build me an app" → working deploy.</p>
-        <div class="tool-tag" style="background: rgba(239,68,68,0.15); color: var(--red);">App builder</div>
-      </div>
-      <div class="tool-card">
-        <h4>Replit Agent</h4>
-        <p>AI builds + runs + deploys in Replit. Good for quick experiments.</p>
-        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">All-in-one</div>
-      </div>
-    </div>
-    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
-      ⚠️ These hit a wall on complex apps. Great for <span class="white">starting</span>, not for <span class="white">scaling</span>.
-    </p>
-  </div>
-
-  <!-- 18: AI IDEs -->
-  <div class="slide">
-    <h2>⌨️ AI-Native IDEs</h2>
-    <h3>You're still the pilot. AI is your copilot.</h3>
-    <div class="tool-grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="tool-card" style="border-color: var(--accent);">
-        <h4>Cursor</h4>
-        <p>VS Code fork with AI superpowers. Tab to autocomplete, ⌘K to edit, chat for bigger changes. The industry standard right now.</p>
-        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Most popular</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--accent2);">
-        <h4>Windsurf</h4>
-        <p>By Codeium. Similar to Cursor. "Cascade" feature chains edits across files. Strong free tier.</p>
-        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">Free option</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--green);">
-        <h4>GitHub Copilot</h4>
-        <p>The original. Lives in VS Code. Great autocomplete, getting smarter with agent mode.</p>
-        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">VS Code native</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--orange);">
-        <h4>Zed</h4>
-        <p>Blazing fast editor with AI assistant built in. For people who care about performance.</p>
-        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Fast</div>
-      </div>
-    </div>
-    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
-      Best for: <span class="white">real projects where you need control</span>. You see every line. You approve every change.
-    </p>
-  </div>
-
-  <!-- 19: CLI AGENTS -->
-  <div class="slide">
-    <h2>🤖 CLI Agents & Platforms</h2>
-    <h3>The AI doesn't just suggest — it does the work.</h3>
-    <div class="tool-grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="tool-card" style="border-color: var(--accent);">
-        <h4>Claude Code</h4>
-        <p>Anthropic's CLI agent. Reads your codebase, writes files, runs tests. Like a junior dev in your terminal.</p>
-        <div class="tool-tag" style="background: rgba(99,102,241,0.15); color: var(--accent);">Terminal agent</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--green);">
-        <h4>Codex (OpenAI)</h4>
-        <p>OpenAI's coding agent. Sandboxed. Runs in its own environment. Good for isolated tasks.</p>
-        <div class="tool-tag" style="background: rgba(34,197,94,0.15); color: var(--green);">Sandboxed</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--accent2);">
-        <h4>Aider</h4>
-        <p>Open source CLI. Works with any model. Git-integrated — every change is a commit.</p>
-        <div class="tool-tag" style="background: rgba(34,211,238,0.15); color: var(--accent2);">Open source</div>
-      </div>
-      <div class="tool-card" style="border-color: var(--orange);">
-        <h4>OpenClaw</h4>
-        <p>Multi-agent platform. Your AI agents coordinate, use tools, browse the web, deploy. The full autopilot.</p>
-        <div class="tool-tag" style="background: rgba(249,115,22,0.15); color: var(--orange);">Multi-agent</div>
-      </div>
-    </div>
-    <p style="margin-top: 16px; font-size: 1.1rem; color: var(--muted);">
-      This is where it gets serious. The AI <span class="white">reads, writes, tests, and ships</span>. You review.
-    </p>
-  </div>
-
-  <!-- 20: HOW TO PICK -->
-  <div class="slide">
-    <h2>Which One Should You Use?</h2>
-    <h3>Depends on what you're building and who you are.</h3>
-    <div class="v-stack">
-      <div class="v-card" style="border-color: var(--pink);">
-        <div class="emoji">🌱</div>
-        <div>
-          <h4>"I'm just starting"</h4>
-          <p><span class="white">ChatGPT or Claude.ai</span> → Bolt or v0 for prototypes → <span class="white">Cursor</span> when you're ready for real projects</p>
+      <div class="col-card">
+        <h4>Prompt to use right now</h4>
+        <div class="prompt-box">
+          <span class="s">"I want to build [your idea]. Ask me questions to help write a product spec with phases and screens."</span>
         </div>
-      </div>
-      <div class="v-card" style="border-color: var(--accent);">
-        <div class="emoji">💻</div>
-        <div>
-          <h4>"I can code a bit"</h4>
-          <p><span class="white">Cursor or Windsurf</span> as your daily driver → Claude Code for bigger refactors → v0 for quick UIs</p>
-        </div>
-      </div>
-      <div class="v-card" style="border-color: var(--green);">
-        <div class="emoji">🏗️</div>
-        <div>
-          <h4>"I'm a developer"</h4>
-          <p><span class="white">Claude Code + Cursor</span> combo → Aider for open-source → OpenClaw to orchestrate multiple agents on a project</p>
-        </div>
-      </div>
-      <div class="v-card" style="border-color: var(--orange);">
-        <div class="emoji">🚀</div>
-        <div>
-          <h4>"I want to ship FAST"</h4>
-          <p><span class="white">Bolt or Lovable</span> for v1 → move to Cursor when you outgrow it → never hand-write boilerplate again</p>
-        </div>
+        <div style="margin-top:12px; font-size:12px; color:var(--muted)">Let it ask. Answer honestly. The output becomes your build guide.</div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== BRINGING IT TOGETHER ==================== -->
-
-  <!-- 21: THE COMBO -->
-  <div class="slide">
-    <p class="huge-text">
-      <span class="white">Knowledge</span> tells you<br>
-      <em>what</em> to build.<br><br>
-      <span class="gradient-text">Tools</span> build it<br>
-      10x faster.
-    </p>
-    <p style="margin-top: 24px; font-size: 1.5rem; color: var(--muted);">
-      One without the other? <span class="white">You're stuck.</span>
-    </p>
+  <!-- ── SLIDE 4: MOCKUPS ── -->
+  <div class="slide" id="s3">
+    <div class="tag">Step 2 — 25 to 35 min</div>
+    <h2 class="h2">See it before <span>you build it.</span></h2>
+    <p class="sub" style="margin-bottom:20px">Pick a design style first. Generate HTML mockups in 2–3 variations. Iterate visually — changing a mockup takes seconds, changing real code takes hours.</p>
+    <div class="mockup-flow">
+      <div class="mf-step">
+        <div class="mf-icon">🎨</div>
+        <div class="mf-title">Pick a style</div>
+        <div class="mf-desc">Browse ui-catalog.mantaray.digital and copy a style that fits</div>
+      </div>
+      <div class="mf-arrow">→</div>
+      <div class="mf-step">
+        <div class="mf-icon">🖼️</div>
+        <div class="mf-title">Generate mockups</div>
+        <div class="mf-desc">Paste style into Claude. Ask for 2–3 HTML variations of each screen</div>
+      </div>
+      <div class="mf-arrow">→</div>
+      <div class="mf-step">
+        <div class="mf-icon">✏️</div>
+        <div class="mf-title">Iterate visually</div>
+        <div class="mf-desc">Tweak until it looks right. Then use this code as your build foundation</div>
+      </div>
+      <div class="mf-arrow">→</div>
+      <div class="mf-step">
+        <div class="mf-icon">⚡</div>
+        <div class="mf-title">Build from it</div>
+        <div class="mf-desc">Low variation — the mockup HTML becomes your real UI base</div>
+      </div>
+    </div>
+    <div class="mockup-tip">
+      💡 <strong>Why HTML mockups?</strong> Faster to change than Figma. Lower variation to the real build — you can literally reuse the code. And Claude is extremely good at generating them.
+    </div>
   </div>
 
-  <!-- 22: WHAT AI GETS WRONG -->
-  <div class="slide">
-    <h2>Things AI Gets <span class="red">Confidently</span> Wrong</h2>
-    <h3>Regardless of which tool you use</h3>
-    <div class="v-stack">
-      <div class="v-card">
-        <div class="emoji">🔓</div>
-        <div>
-          <h4>Security</h4>
-          <p>API keys in frontend. No input validation. Auth that looks right but isn't. <span class="red">Every. Single. Time.</span></p>
+  <!-- ── SLIDE 5: BUILD ── -->
+  <div class="slide" id="s4">
+    <div class="tag">Step 3 — 35 to 50 min</div>
+    <h2 class="h2">Build it <span>properly.</span></h2>
+    <p class="sub" style="margin-bottom:20px">Two rules that will save you from most beginner mistakes.</p>
+    <div class="build-grid">
+      <div class="build-card">
+        <h4>Stack</h4>
+        <div class="stack-items">
+          <span class="stack-tag">Next.js</span>
+          <span class="stack-tag">Convex</span>
+          <span class="stack-tag">Convex Auth</span>
+          <span class="stack-tag">Vercel</span>
+          <span class="stack-tag">Claude Code</span>
         </div>
+        <div style="margin-top:14px; font-size:13px; color:var(--muted)">Tell Claude your stack at the start of every session. Every time.</div>
       </div>
-      <div class="v-card">
-        <div class="emoji">🎭</div>
-        <div>
-          <h4>Fake packages</h4>
-          <p>"npm install super-auth-pro" — doesn't exist. The AI invented it. Happens more than you'd think.</p>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="emoji">🍝</div>
-        <div>
-          <h4>Architecture</h4>
-          <p>Code that works NOW but falls apart when you add the next feature. No separation. No plan.</p>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="emoji">📦</div>
-        <div>
-          <h4>Over-engineering</h4>
-          <p>Kubernetes for a todo app. Microservices for 3 users. Redis cache for a blog. Just... no.</p>
-        </div>
+      <div class="build-card">
+        <h4>Two rules — no exceptions</h4>
+        <div class="rule"><span class="rule-icon">⚡</span> Build backend functions in parallel with the frontend. Never at the end.</div>
+        <div class="rule"><span class="rule-icon">🚫</span> No mock data. Ever. If it's hard-coded, it will haunt you.</div>
       </div>
     </div>
   </div>
 
-  <!-- 23: MISCONCEPTIONS -->
-  <div class="slide">
-    <h2>Common Misconceptions</h2>
-    <div class="v-stack" style="margin-top: 8px;">
-      <div class="v-card">
-        <div class="emoji">🙅</div>
-        <div>
-          <h4>"You need to be a developer to vibe code"</h4>
-          <p>You don't. You need to understand the <span class="white">shape</span> of what you're building. That's what today is about.</p>
-        </div>
+  <!-- ── SLIDE 6: DEPLOY + ITERATE ── -->
+  <div class="slide" id="s5">
+    <div class="tag">Step 4 — 50 to 60 min</div>
+    <h2 class="h2">Deploy first. <span>Then fix.</span></h2>
+    <p class="sub" style="margin-bottom:16px">First pass is always ~75%. That's fine. Ship it, get a live link, then iterate on the real thing — not localhost.</p>
+    <div class="deploy-box">
+      <span style="color:var(--muted)">$</span>
+      <span>vercel --prod</span>
+      <span style="color:var(--muted); margin-left:auto">→ live in 30 seconds</span>
+    </div>
+    <div class="bug-compare">
+      <div class="bug-card bug-bad">
+        <div class="bug-label">❌ Vague bug report</div>
+        <div class="bug-text">"The timer is broken"</div>
       </div>
-      <div class="v-card">
-        <div class="emoji">🙅</div>
-        <div>
-          <h4>"AI will replace developers"</h4>
-          <p>It replaces typing, not thinking. Someone still needs to decide what to build and catch what's wrong.</p>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="emoji">🙅</div>
-        <div>
-          <h4>"The more you prompt, the better it gets"</h4>
-          <p>Longer prompts ≠ better output. One clear, specific prompt beats 20 vague ones.</p>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="emoji">🙅</div>
-        <div>
-          <h4>"Pick the best tool and stick with it"</h4>
-          <p>Different tools for different jobs. You'll likely use 2-3 together.</p>
-        </div>
+      <div class="bug-card bug-good">
+        <div class="bug-label">✅ Specific bug report</div>
+        <div class="bug-text">"The timer resets when I click pause. It should stop at the current time and resume from there when I click again."</div>
       </div>
     </div>
+    <div style="margin-top:14px; font-size:13px; color:var(--muted)">The more specific your bug prompt, the faster the fix. Treat it like a ticket, not a complaint.</div>
   </div>
 
-  <!-- 24: MY STACK -->
-  <div class="slide">
-    <h2>What I'd Use Tomorrow</h2>
-    <h3>If I had to ship a product in a weekend</h3>
-    <div class="layers">
-      <div class="layer-card" style="border-color: var(--accent);">
-        <div class="emoji">⚛️</div>
-        <h4>Next.js 15</h4>
-        <p>AI knows it best. Huge community.</p>
-        <div class="rec">Expo for mobile</div>
+  <!-- ── SLIDE 7: CLOSE ── -->
+  <div class="slide" id="s6">
+    <div class="tag">That's a wrap</div>
+    <h2 class="h2">You shipped <span>something real.</span></h2>
+    <p class="sub" style="margin-bottom:20px">The process works every time. Keep using it.</p>
+    <div class="close-items">
+      <div class="close-item">
+        <div class="close-num">1</div>
+        <div class="close-text"><strong>Spec before you build.</strong> Always. Even a 10-minute spec will save you hours.</div>
       </div>
-      <div class="layer-card" style="border-color: var(--accent2);">
-        <div class="emoji">🔄</div>
-        <h4>Convex</h4>
-        <p>Backend + DB. Real-time. TypeScript.</p>
-        <div class="rec">or Supabase</div>
+      <div class="close-item">
+        <div class="close-num">2</div>
+        <div class="close-text"><strong>Mockup before you code.</strong> Change pixels, not logic.</div>
       </div>
-      <div class="layer-card" style="border-color: var(--green);">
-        <div class="emoji">🔐</div>
-        <h4>Clerk</h4>
-        <p>Auth in 5 minutes. Don't build this.</p>
-        <div class="rec">seriously, don't</div>
+      <div class="close-item">
+        <div class="close-num">3</div>
+        <div class="close-text"><strong>Deploy early, iterate on the live link.</strong> Real apps don't live on localhost.</div>
       </div>
-      <div class="layer-card" style="border-color: var(--orange);">
-        <div class="emoji">💳</div>
-        <h4>Stripe</h4>
-        <p>Checkout → webhook → done.</p>
-        <div class="rec">just Stripe</div>
+      <div class="close-item">
+        <div class="close-num">4</div>
+        <div class="close-text"><strong>Specific prompts get specific fixes.</strong> Describe the exact behavior, not just "it's broken".</div>
       </div>
     </div>
-    <p style="margin-top: 20px; font-size: 1.1rem; color: var(--muted);">
-      Built with: <span class="white">Cursor + Claude Code</span> · Deployed on <span class="white">Vercel</span> · Done in a weekend.
-    </p>
-  </div>
-
-  <!-- ==================== WORKSHOP ==================== -->
-
-  <!-- 25: WORKSHOP -->
-  <div class="slide">
-    <h1>🛠️ Let's Build</h1>
-    <div class="divider"></div>
-    <p class="big-text" style="margin-bottom: 32px;">
-      Enough slides.<br>
-      <span class="white">Open your laptops.</span>
-    </p>
-    <div class="workshop-steps">
-      <div class="workshop-step">
-        <div class="step-num">1</div>
-        <h4>Think First</h4>
-        <p>What's your data? What's the flow? 2 minutes on paper.</p>
-      </div>
-      <div class="workshop-step">
-        <div class="step-num">2</div>
-        <h4>Pick a Tool</h4>
-        <p>Any tool from what we covered. Match it to your level.</p>
-      </div>
-      <div class="workshop-step">
-        <div class="step-num">3</div>
-        <h4>Ship It</h4>
-        <p>30 minutes. Working app. Show the room.</p>
-      </div>
+    <div class="discord-box">
+      <div class="discord-label">Questions? Get unstuck →</div>
+      <div class="discord-link">discord.com/channels/900827411917201418/1479322986568876065</div>
     </div>
-  </div>
-
-  <!-- 26: CHALLENGE -->
-  <div class="slide">
-    <h2>🎯 Pick Your Challenge</h2>
-    <div class="stack-grid" style="margin-top: 24px;">
-      <div class="stack-col" style="border-color: var(--accent);">
-        <h4 style="color: var(--accent);">🟢 Getting Started</h4>
-        <ul style="list-style: none;">
-          <li style="display:block; padding: 6px 0;">Portfolio site with working contact form</li>
-          <li style="display:block; padding: 6px 0;">Expense tracker with local storage</li>
-          <li style="display:block; padding: 6px 0;">Quiz app that keeps score</li>
-        </ul>
-      </div>
-      <div class="stack-col" style="border-color: var(--accent2);">
-        <h4 style="color: var(--accent2);">🔵 Show Off</h4>
-        <ul style="list-style: none;">
-          <li style="display:block; padding: 6px 0;">Real-time chat with auth</li>
-          <li style="display:block; padding: 6px 0;">URL shortener with click analytics</li>
-          <li style="display:block; padding: 6px 0;">Kanban board with drag & drop</li>
-        </ul>
-      </div>
-    </div>
-    <p style="margin-top: 24px; font-size: 1.3rem; color: var(--muted);">
-      Remember: <span class="white">think first, then prompt</span>. The tool doesn't matter. Your thinking does.
-    </p>
-  </div>
-
-  <!-- 27: TAKEAWAY -->
-  <div class="slide">
-    <div class="quote" style="font-size: 2.2rem; border-left-color: var(--accent2);">
-      The best vibe coders<br>
-      are the ones who could've<br>
-      written it themselves.
-      <span class="attr">— but they're too smart to waste the time</span>
-    </div>
-  </div>
-
-  <!-- 28: THANKS -->
-  <div class="slide">
-    <h1 class="gradient-text">Thanks.</h1>
-    <p class="big-text" style="margin-top: 16px;">
-      Ahmed Afify<br>
-      <span class="muted" style="font-size: 1.2rem;">MSc CS · 10 years building · Still vibing</span>
-    </p>
-    <div style="margin-top: 32px;">
-      <span class="tag purple">@aafify</span>
-      <span class="tag cyan">Mantaray Digital</span>
-    </div>
-    <p style="margin-top: 40px; font-size: 1.3rem; color: var(--muted);">
-      Now go build something.<br>
-      <span class="green">With knowledge.</span> 🚀
-    </p>
   </div>
 
 </div>
 
-<script>
-  const slides = document.querySelectorAll('.slide');
-  const counter = document.getElementById('counter');
-  const progress = document.getElementById('progress');
-  let current = 0;
+<div class="nav">
+  <button class="nbtn" id="prev">← Prev</button>
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+  <div class="dot" data-i="3"></div>
+  <div class="dot" data-i="4"></div>
+  <div class="dot" data-i="5"></div>
+  <div class="dot" data-i="6"></div>
+  <button class="nbtn" id="next">Next →</button>
+</div>
 
-  function showSlide(n) {
-    slides.forEach((s, i) => {
-      s.classList.remove('active', 'prev');
-      if (i === n) s.classList.add('active');
-      else if (i < n) s.classList.add('prev');
-    });
-    counter.textContent = `${n + 1} / ${slides.length}`;
-    progress.style.width = `${((n + 1) / slides.length) * 100}%`;
-    current = n;
+<script>
+  let cur = 0;
+  const total = 7;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('counter');
+
+  function go(n) {
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    setTimeout(() => slides[cur].classList.remove('exit'), 450);
+    dots[cur].classList.remove('active');
+    cur = ((n % total) + total) % total;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${total}`;
   }
 
-  function next() { if (current < slides.length - 1) showSlide(current + 1); }
-  function prev() { if (current > 0) showSlide(current - 1); }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
-    if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prev(); }
-    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
-    if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+  document.getElementById('next').onclick = () => go(cur + 1);
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  dots.forEach(d => d.addEventListener('click', () => go(+d.dataset.i)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    if (e.key === 'ArrowLeft') go(cur - 1);
   });
-
-  let touchStart = 0;
-  document.addEventListener('touchstart', (e) => { touchStart = e.touches[0].clientX; });
-  document.addEventListener('touchend', (e) => {
-    const diff = touchStart - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); }
-  });
-
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('a, button')) return;
-    if (e.clientX > window.innerWidth / 2) next();
-    else prev();
-  });
-
-  showSlide(0);
 </script>
-
 </body>
 </html>
