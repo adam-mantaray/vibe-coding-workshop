@@ -262,10 +262,11 @@
     </div>
     <div class="card">
       <div class="clabel">Use this prompt right now</div>
-      <div class="code-box">
-        <span class="s">"I want to build [your idea] using Next.js and Convex. Ask me questions to write a product spec with phases and screens."</span>
+      <div class="code-box" style="position:relative">
+        <button onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent.trim());this.textContent='copied!';setTimeout(()=>this.textContent='copy',2000)" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.12);border:none;color:var(--accent);font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;cursor:pointer;letter-spacing:0.05em;text-transform:uppercase">copy</button>
+        <span class="s">"I want to build [your idea] using Next.js and Convex. Ask me questions to write a product spec with phases and screens. Once done, create a docs/ folder in the project root and save the spec as docs/spec.md."</span>
       </div>
-      <div style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.65">Include your stack from the start — it shapes how the spec is written and means less back-and-forth later. Let it ask, answer honestly, then save the output.</div>
+      <div style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.65">Include your stack from the start — it shapes how the spec is written and means less back-and-forth later. Let it ask, answer honestly. The spec saves to <code style="font-family:var(--mono);background:var(--al);padding:1px 5px;border-radius:3px">docs/spec.md</code> so you always have it to hand.</div>
     </div>
   </div>
 </div>
