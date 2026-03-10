@@ -382,7 +382,7 @@
 
 <div class="hero">
   <h1>Get set up <span>before you arrive.</span></h1>
-  <p>This workshop is hands-on. You'll be building something real on the day — so we need you ready to go from the start. Set everything up below before you come. It takes about 30–45 minutes.</p>
+  <p>This workshop is hands-on. You'll be building something real on the day — so we need you ready to go from the start. Set everything up below before you come. It takes around 15 minutes.</p>
 </div>
 
 <div class="progress-bar" id="progressBar">
@@ -713,8 +713,16 @@
   }
 
   function copyCode(btn) {
-    const text = btn.parentElement.innerText.replace('copy\n', '').replace('copied!\n', '').trim();
-    navigator.clipboard.writeText(text).then(() => {
+    const block = btn.parentElement;
+    const lines = Array.from(block.childNodes)
+      .filter(n => !(n.nodeType === 1 && (n.classList.contains('copy-btn') || n.classList.contains('comment'))))
+      .map(n => n.textContent)
+      .join('')
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0)
+      .join('\n');
+    navigator.clipboard.writeText(lines).then(() => {
       btn.textContent = 'copied!';
       setTimeout(() => btn.textContent = 'copy', 2000);
     });
